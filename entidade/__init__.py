@@ -1,9 +1,9 @@
-from animal import Animal
-from cachorro import Cachorro
-from gato import Gato
-from vacinas import Vacinas
-from pessoa import Pessoa
-from endereco import Endereco
-from dados import Dados
+from entidade.animal import Animal
+from entidade.cachorro import Cachorro
+from entidade.gato import Gato
+from entidade.vacinas import Vacinas
+from entidade.pessoa import Pessoa
+from entidade.endereco import Endereco
+from entidade.dados import Dados
 
 dadosGlobais = Dados()

@@ -1,14 +1,13 @@
-from tela_padrao import TelaPadrao
-
-campos = '''--------------------PESSOAS--------------------
- 0- Retornar
- 1- Cadastrar uma nova Pessoa
- 2- Listar/Alterar/Excluir os cadastros
-
-
- Feito por: Nicolas Lazzeri Pimenta
---------------------------------------------'''
+from limite.tela_padrao import TelaPadrao
 
 class TelaPessoa(TelaPadrao):
-    def __init__(self, camposTela: str = campos):
-        super().__init__(camposTela)
+    def abreTela(self):
+        print('\n'*100 + '''            --------------------PESSOAS--------------------
+
+            1- Retornar
+            2- Cadastrar uma nova Pessoa
+            3- Listar/Alterar/Excluir os cadastros
+
+
+            Feito por: Nicolas Lazzeri Pimenta
+            --------------------------------------------''')

@@ -1,10 +1,18 @@
 from limite.tela_inicial import TelaInicial
-from controlador_pessoa import ControladorPessoa
+from controle.controlador_pessoa import ControladorPessoa
 
 class ControladorInicial:
     def __init__(self):
-        self.tela = TelaInicial(self)
-        self.controladorPessoa = ControladorPessoa(self)
+        self.__tela = TelaInicial()
+        self.__controladorPessoa = ControladorPessoa()
+
+    @property
+    def tela(self):
+        return self.__tela
+    
+    @property
+    def controladorPessoa(self):
+        return self.__controladorPessoa
 
     def iniciar(self):
         while True:
@@ -16,5 +24,5 @@ class ControladorInicial:
         
 
     def menuPessoa(self):
-        self.ConstroladorPessoa.iniciar()
+        self.controladorPessoa.iniciar()
         return

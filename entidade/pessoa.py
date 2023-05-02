@@ -2,7 +2,7 @@ class Pessoa:
     def __init__(self, cpf: str, nome: str, dataNascimento, endereco: object):
         self.__cpf = cpf
         self.__nome = nome
-        self.__idade = dataNascimento
+        self.__dataNascimento = dataNascimento
         self.__endereco = endereco
 
     @property
@@ -14,8 +14,8 @@ class Pessoa:
         return self.__nome
     
     @property
-    def idade(self):
-        return self.__idade
+    def dataNascimento(self):
+        return self.__dataNascimento
     
     @property
     def endereco(self):
@@ -29,9 +29,9 @@ class Pessoa:
     def nome(self, nome):
         self.__nome = nome
     
-    @idade.setter
-    def idade(self, idade):
-        self.__idade = idade
+    @dataNascimento.setter
+    def dataNascimento(self, dataNascimento):
+        self.__dataNascimento = dataNascimento
 
     @endereco.setter
     def endereco(self, endereco):
