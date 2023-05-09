@@ -1,6 +1,7 @@
 class Animal:
-    def __init__(self, id: int, nome: str, raca: str, dono: object):
+    def __init__(self, id: int, tipo: str, nome: str, raca: str, dono: object):
         self.__id = id
+        self.__tipo = tipo
         self.__nome = nome
         self.__raca = raca
         self.__dono = dono
@@ -9,6 +10,10 @@ class Animal:
     @property
     def id(self):
         return self.__id
+    
+    @property
+    def tipo(self):
+        return self.__tipo
     
     @property
     def nome(self):
@@ -29,6 +34,10 @@ class Animal:
     @id.setter
     def id(self, id):
         self.__id = id
+
+    @tipo.setter
+    def tipo(self, tipo):
+        self.__tipo = tipo
 
     @nome.setter
     def nome(self, nome):
