@@ -35,7 +35,7 @@ class Dados:
         self.__pessoas.append(pessoa)
 
     def saveEndereco(self, endereco):
-        self.__adocao.append(endereco)
+        self.__enderecos.append(endereco)
 
     def saveAnimal(self, animal):
         self.__animais.append(animal)
@@ -44,7 +44,7 @@ class Dados:
         self.__vacinas.append(vacina)
 
     def saveDoacao(self, doacao):
-        self.__doacao.append(doacao)
+        self.__doacoes.append(doacao)
 
     def saveAdocao(self, adocao):
-        self.__adocao.append(adocao)
+        self.__adocoes.append(adocao)

@@ -1,28 +1,27 @@
 from limite.tela_inicial import TelaInicial
 from controle.controlador_pessoa import ControladorPessoa
+from controle.controlador_animal import ControladorAnimal
+from controle.controlador_doacao import ControladorDoacao
+from controle.controlador_adocao import ControladorAdocao
+from controle.controlador_relatorio import ControladorRelatorio
+
 
 class ControladorInicial:
     def __init__(self):
-        self.__tela = TelaInicial()
-        self.__controladorPessoa = ControladorPessoa()
-
-    @property
-    def tela(self):
-        return self.__tela
-    
-    @property
-    def controladorPessoa(self):
-        return self.__controladorPessoa
+        self.controladorPessoa = ControladorPessoa()
+        self.controladorAnimal = ControladorAnimal()
+        self.controladorDoacao = ControladorDoacao()
+        self.controladorAdocao = ControladorAdocao()
+        self.controladorRelatorio = ControladorRelatorio()
+        self.tela = TelaInicial()
 
     def iniciar(self):
         while True:
             self.tela.abreTela()
-            escolha = self.tela.validaInput(3)
-            if escolha == 1: pass
-            if escolha == 2: self.menuPessoa()
-            if escolha == 3: pass
-        
-
-    def menuPessoa(self):
-        self.controladorPessoa.iniciar()
-        return
+            escolha = self.tela.validaInput(min=1, max=5)
+            if escolha == 'X': break
+            if escolha == 1: self.controladorAnimal.iniciar()
+            if escolha == 2: self.controladorPessoa.iniciar()
+            if escolha == 3: self.controladorDoacao.iniciar()
+            if escolha == 4: self.controladorAdocao.iniciar()
+            if escolha == 5: self.controladorRelatorio.iniciar()

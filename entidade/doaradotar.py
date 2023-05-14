@@ -1,12 +1,12 @@
-class Vacina:
-    def __init__(self, tipo: str, data, animal: object):
-        self.__tipo = tipo
-        self.__data = data
+class AbastractDoacaoAdocao:
+    def __init__(self, pessoa: object, animal: object, data):
+        self.__pessoa = pessoa
         self.__animal = animal
+        self.__data = data
 
     @property
-    def tipo(self):
-        return self.__tipo
+    def pessoa(self):
+        return self.__pessoa
     
     @property
     def data(self):
@@ -16,9 +16,9 @@ class Vacina:
     def animal(self):
         return self.__animal
     
-    @tipo.setter
-    def tipo(self, tipo):
-        self.__tipo = tipo
+    @pessoa.setter
+    def pessoa(self, pessoa):
+        self.__pessoa = pessoa
 
     @data.setter
     def data(self, data):
