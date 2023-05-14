@@ -59,7 +59,10 @@ class ControladorDoacao:
         print('\n'*2 + ' Digite X para cancelar a operação.')
         print('----------------------------------------------------------')
 
-        data = str(input('\n Digite S se a doação foi hoje ou N se foi em outro dia: ')).capitalize()
+        while True:
+            data = str(input('\n Digite S se a doação foi hoje ou N se foi em outro dia: ')).capitalize()
+            if data != 'S' and data != 'N' and data != 'X': print(' Valor inválido, por favor tente novamente')
+            else: break
         if data == 'X': return
         if data == 'S':
             dia = datetime.now().day
@@ -190,7 +193,10 @@ class ControladorDoacao:
             dadosGlobais.doacoes[escolha-1].motivo = novoDado
 
         if dado == 4:
-            novoDado = str(input('\n Digite S se a doação foi hoje ou N se foi em outro dia: ')).capitalize()
+            while True:
+                novoDado = str(input('\n Digite S se a doação foi hoje ou N se foi em outro dia: ')).capitalize()
+                if novoDado != 'S' and novoDado != 'N' and novoDado != 'X': print(' Valor inválido, por favor tente novamente')
+                else: break
             if novoDado == 'X': return
             if novoDado == 'S':
                 dia = datetime.now().day

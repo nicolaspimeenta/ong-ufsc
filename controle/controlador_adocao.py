@@ -68,7 +68,10 @@ class ControladorAdocao:
         print('\n'*2 + ' Digite X para cancelar a operação.')
         print('----------------------------------------------------------')
 
-        data = str(input('\n Digite S se a doação foi hoje ou N se foi em outro dia: ')).capitalize()
+        while True:
+            data = str(input('\n Digite S se a adoção foi hoje ou N se foi em outro dia: ')).capitalize()
+            if data != 'S' and data != 'N' and data != 'X': print(' Valor inválido, por favor tente novamente')
+            else: break
         if data == 'X': return
         if data == 'S':
             dia = datetime.now().day
@@ -196,7 +199,10 @@ class ControladorAdocao:
             dadosGlobais.adocoes[escolha-1].animal = listaAdotaveis[escolha-1]
 
         if dado == 3:
-            novoDado = str(input('\n Digite S se a doação foi hoje ou N se foi em outro dia: ')).capitalize()
+            while True:
+                data = str(input('\n Digite S se a adoção foi hoje ou N se foi em outro dia: ')).capitalize()
+                if data != 'S' and data != 'N' and data != 'X': print(' Valor inválido, por favor tente novamente')
+                else: break
             if novoDado == 'X': return
             if novoDado == 'S':
                 dia = datetime.now().day

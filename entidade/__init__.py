@@ -8,6 +8,7 @@ from entidade.dados import Dados
 
 dadosGlobais = Dados()
 
+# DADOS PARA OTIMIZAR TESTES
 dadosGlobais.saveEndereco(Endereco('88052600', 2270, 'Casa', 'Médio', 3))
 dadosGlobais.saveEndereco(Endereco('88101030', 28, 'Apartamento', 'Pequeno', 0))
 dadosGlobais.saveEndereco(Endereco('88710210', 9, 'Casa', 'Grande', 1))
@@ -24,15 +25,13 @@ dadosGlobais.saveAnimal(Cachorro(3, 'Cachorro', 'TESTE2', 'Pitbull', None, 'Gran
 dadosGlobais.saveAnimal(Cachorro(4, 'Cachorro', 'TESTE3', 'Qualquer', None, 'Pequeno'))
 dadosGlobais.saveAnimal(Cachorro(5, 'Cachorro', 'TESTE4', 'Qualquer', None, 'Grande'))
 
-vacina1 = Vacina('Raiva', ['20', '09', '2015'], dadosGlobais.animais[0])
-vacina2 = Vacina('Leptospirose', ['09', '11', '2015'], dadosGlobais.animais[0])
-vacina3 = Vacina('Hepatite Infecciosa', ['01', '04', '2014'], dadosGlobais.animais[0])
-dadosGlobais.animais[0].addVacina(vacina1)
-dadosGlobais.saveVacina(vacina1)
-dadosGlobais.animais[0].addVacina(vacina2)
-dadosGlobais.saveVacina(vacina2)
-dadosGlobais.animais[0].addVacina(vacina3)
-dadosGlobais.saveVacina(vacina3)
 
-dadosGlobais.saveAdocao(Adocao(dadosGlobais.pessoas[0], dadosGlobais.animais[0], ['13', '05', '2023'], True))
+dadosGlobais.saveVacina(Vacina('Raiva', ['20', '09', '2015'], dadosGlobais.animais[0]))
+dadosGlobais.animais[0].addVacina(dadosGlobais.vacinas[-1])
+dadosGlobais.saveVacina(Vacina('Leptospirose', ['09', '11', '2015'], dadosGlobais.animais[0]))
+dadosGlobais.animais[0].addVacina(dadosGlobais.vacinas[-1])
+dadosGlobais.saveVacina(Vacina('Hepatite Infecciosa', ['01', '04', '2014'], dadosGlobais.animais[0]))
+dadosGlobais.animais[0].addVacina(dadosGlobais.vacinas[-1])
+
+dadosGlobais.saveAdocao(Adocao(dadosGlobais.pessoas[0], dadosGlobais.animais[0], ['13', '04', '2023'], True))
 
