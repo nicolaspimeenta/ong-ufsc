@@ -19,7 +19,7 @@ class TelaPadrao:
                 if data != 'S' and data != 'N' and data != 'X': print(' Valor inválido, por favor tente novamente')
                 else: break
             if data == 'X': return
-            if data == 'S': return datetime.date.now()
+            if data == 'S': return datetime.date.today()
             if data == 'N': pass
             
         while True:

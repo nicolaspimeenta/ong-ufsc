@@ -29,7 +29,10 @@ class ControladorPessoa:
                 listaAdotantes = []
                 for pessoa in dadosGlobais.pessoas:
                     if self.validaAdocao(pessoa, cachorroGrande): listaAdotantes.append(pessoa)
-                for i in range(listaAdotantes): print(f' {i+1}- {listaAdotantes[i].nome} | {listaAdotantes[i].cpf}')
+                if len(listaAdotantes) == 0: print(' Nenhuma pessoa cadastrada pode adotar esse animal.')
+                for i in range(len(listaAdotantes)):
+                    margem = ' '*(30 - len(listaAdotantes[i].nome))
+                    print(f' {i+1}- {listaAdotantes[i].nome} {margem} | {listaAdotantes[i].cpf}')
             print('\n'*2 + ' Digite X para cancelar a operação.')
             print('---------------------------------------------------------------------')
             return listaAdotantes
@@ -40,7 +43,9 @@ class ControladorPessoa:
             print(' 0- Cadastrar uma nova pessoa')
             if len(dadosGlobais.pessoas) == 0: print(' Não há nenhuma pessoa cadastrada no sistema.')
             else:
-                for i in range(len(dadosGlobais.pessoas)): print(f' {i+1}- {dadosGlobais.pessoas[i].nome} | {dadosGlobais.pessoas[i].cpf}')
+                for i in range(len(dadosGlobais.pessoas)): 
+                    margem = ' '*(30 - len(dadosGlobais.pessoas[i].nome)) 
+                    print(f' {i+1}- {dadosGlobais.pessoas[i].nome} {margem} | {dadosGlobais.pessoas[i].cpf}')
             print('\n'*2 + ' Digite X para cancelar a operação.')
             print('---------------------------------------------------------------------')
 
@@ -53,16 +58,16 @@ class ControladorPessoa:
             try:
                 cpf = self.validarCPF()
                 if cpf.capitalize() == 'X': return
-                for obj in dadosGlobais.pessoas:
-                    if cpf == obj.cpf: raise ValueError
-            except Exception: print(f' O CPF "{cpf}" já foi cadastrado, por favor digite outro')
+                for pessoa in dadosGlobais.pessoas:
+                    if cpf == pessoa.cpf: raise ValueError
+            except Exception: print(f' Esse CPF já foi cadastrado, por favor digite outro')
             else: break
 
         print('\n'*100 + '--------------------CADASTRO DE PESSOA--------------------')
         print(f'\n {cpf} | Nome | Endereço | Data de Nascimento') 
         print('\n'*2 + ' Digite X para cancelar a operação.')
         print('----------------------------------------------------------')
-        nome = str(input('\n Digite o Nome: ')).capitalize()
+        nome = str(input('\n Digite o Nome: ')).title()
         if nome == 'X': return
 
         print('\n'*100 + '--------------------CADASTRO DE PESSOA--------------------')
@@ -113,7 +118,7 @@ class ControladorPessoa:
         print('\n 0- Excluir Cadastro')
         print(f' 1- CPF: {dadosGlobais.pessoas[escolha-1].cpf}')
         print(f' 2- Nome: {dadosGlobais.pessoas[escolha-1].nome}')
-        print(f' 3- CEP: {dadosGlobais.pessoas[escolha-1].endereco.cep} | n° {dadosGlobais.pessoas[escolha-1].endereco.numero} | {dadosGlobais.pessoas[escolha-1].endereco.tipo} | {dadosGlobais.pessoas[escolha-1].endereco.tamanho} | {dadosGlobais.pessoas[escolha-1].endereco.animais}')
+        print(f' 3- CEP: {dadosGlobais.pessoas[escolha-1].endereco.cep} | n° {dadosGlobais.pessoas[escolha-1].endereco.numero} | {dadosGlobais.pessoas[escolha-1].endereco.tipo} | {dadosGlobais.pessoas[escolha-1].endereco.tamanho} | {dadosGlobais.pessoas[escolha-1].endereco.animais} animal(is)')
         print(f' 4- Data de Nascimento: {dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%d")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%m")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%Y")}')
         print('\n'*2 + ' Digite X para cancelar a operação.')
         print('--------------------------------------------------------')
@@ -124,7 +129,7 @@ class ControladorPessoa:
             print('\n'*100 + '--------------------EXCLUIR CADASTRO--------------------')
             print(f'\n CPF: {dadosGlobais.pessoas[escolha-1].cpf}')
             print(f' Nome: {dadosGlobais.pessoas[escolha-1].nome}')
-            print(f' CEP: {dadosGlobais.pessoas[escolha-1].endereco.cep} | n° {dadosGlobais.pessoas[escolha-1].endereco.numero} | {dadosGlobais.pessoas[escolha-1].endereco.tipo} | {dadosGlobais.pessoas[escolha-1].endereco.tamanho} | {dadosGlobais.pessoas[escolha-1].endereco.animais}')
+            print(f' CEP: {dadosGlobais.pessoas[escolha-1].endereco.cep} | n° {dadosGlobais.pessoas[escolha-1].endereco.numero} | {dadosGlobais.pessoas[escolha-1].endereco.tipo} | {dadosGlobais.pessoas[escolha-1].endereco.tamanho} | {dadosGlobais.pessoas[escolha-1].endereco.animais} animal(is)')
             print(f' Data de Nascimento: {dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%d")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%m")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%Y")}')
             print('\n'*2 + ' Digite X para cancelar a operação.')
             print('--------------------------------------------------------')
@@ -142,7 +147,7 @@ class ControladorPessoa:
             dadosGlobais.pessoas[escolha-1].cpf = novoDado
 
         if dado == 2: 
-            novoDado = str(input('\n Digite o Nome: ')).capitalize()
+            novoDado = str(input('\n Digite o Nome: ')).title()
             if novoDado == 'X': return
             dadosGlobais.pessoas[escolha-1].nome = novoDado
 
@@ -159,7 +164,7 @@ class ControladorPessoa:
         print('\n'*100 + '--------------------ALTERAR CADASTRO--------------------')
         print(f'\n CPF: {dadosGlobais.pessoas[escolha-1].cpf}')
         print(f' Nome: {dadosGlobais.pessoas[escolha-1].nome}')
-        print(f' CEP: {dadosGlobais.pessoas[escolha-1].endereco.cep} | n° {dadosGlobais.pessoas[escolha-1].endereco.numero} | {dadosGlobais.pessoas[escolha-1].endereco.tipo} | {dadosGlobais.pessoas[escolha-1].endereco.tamanho} | {dadosGlobais.pessoas[escolha-1].endereco.animais}')
+        print(f' CEP: {dadosGlobais.pessoas[escolha-1].endereco.cep} | n° {dadosGlobais.pessoas[escolha-1].endereco.numero} | {dadosGlobais.pessoas[escolha-1].endereco.tipo} | {dadosGlobais.pessoas[escolha-1].endereco.tamanho} | {dadosGlobais.pessoas[escolha-1].endereco.animais} animal(is)')
         print(f' Data de Nascimento: {dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%d")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%m")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%Y")}')
         print('\n'*2 + ' Digite X para cancelar as alterações.')
         print('--------------------------------------------------------')
@@ -175,11 +180,12 @@ class ControladorPessoa:
         vCpf = CPF()
         while True:
             try:
-                cpf = str(input('\n Digite o CPF: ')).capitalize()
+                cpf = str(input('\n Digite o CPF (apenas números): ')).capitalize()
                 if cpf == 'X': return cpf
                 if cpf == 'R': cpf = vCpf.generate()
+                if not cpf.isdigit(): raise ValueError
                 if not vCpf.validate(cpf): raise ValueError
-            except Exception: print(f' O CPF "{cpf}" é inválido, por favor digite outro')
+            except Exception: print(f' CPF inválido, por favor digite outro')
             else: return cpf[:3] + '.' + cpf[3:6] + '.' + cpf[6:9] + '-' + cpf[9:11]
 
     def validarEndereco(self):

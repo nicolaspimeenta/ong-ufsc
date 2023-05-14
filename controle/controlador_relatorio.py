@@ -57,7 +57,7 @@ class ControladorRelatorio:
 
                     print('\n'*100 + '--------------------INTERVALO ESPECÍFICO--------------------')
                     print(f'\n Data Mínima: {dataMinima.strftime("%d")}/{dataMinima.strftime("%m")}/{dataMinima.strftime("%Y")}')
-                    print(' Data Máxima: 00 / 00 / 0000')
+                    print(' Data Máxima: 00/00/0000')
                     print('\n'*2 + ' Digite X para cancelar a operação.')
                     print('------------------------------------------------------------')
                     dataMaxima = self.tela.validaData(True)

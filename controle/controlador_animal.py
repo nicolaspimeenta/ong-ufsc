@@ -14,7 +14,7 @@ class ControladorAnimal:
     def iniciar(self):
         while True:
             self.tela.abreTela()
-            escolha = self.tela.validaInput(min=1, max=2)
+            escolha = self.tela.validaInput(min=1, max=3)
             if escolha == 'X': return
             if escolha == 1: self.cadastrarAnimal()
             if escolha == 2: self.gerenciarAnimal()
@@ -30,7 +30,10 @@ class ControladorAnimal:
                 listaAdotaveis = []
                 for animal in dadosGlobais.animais:
                     if self.validaAdocao(animal, cachorroGrande): listaAdotaveis.append(animal)
-                for i in range(listaAdotaveis): print(f' {i+1}- {listaAdotaveis[i].tipo} | {listaAdotaveis[i].nome}')
+                if len(listaAdotaveis) == 0: print(' Nenhum animal cadastrado na ONG está em condições de ser adotado.')
+                for i in range(len(listaAdotaveis)):
+                    margem = ' '*(10 - len(listaAdotaveis[i].tipo))
+                    print(f' {i+1}- {listaAdotaveis[i].tipo} {margem} | {listaAdotaveis[i].nome}')
             print('\n'*2 + ' Digite X para cancelar a operação.')
             print('---------------------------------------------------------------------')
             return listaAdotaveis
@@ -41,7 +44,9 @@ class ControladorAnimal:
             print(' 0- Cadastrar um novo animal')
             if len(dadosGlobais.animais) == 0: print('\n Não há nenhum animal cadastrado no sistema.') 
             else:
-                for i in range(len(dadosGlobais.animais)): print(f' {i+1}- {dadosGlobais.animais[i].tipo} | {dadosGlobais.animais[i].nome}')
+                for i in range(len(dadosGlobais.animais)): 
+                    margem = ' '*(10 - len(dadosGlobais.animais[i].tipo))
+                    print(f' {i+1}- {dadosGlobais.animais[i].tipo} {margem} | {dadosGlobais.animais[i].nome}')
             print('\n'*2 + ' Digite X para cancelar a operação.')
             print('---------------------------------------------------------------------')
 
@@ -73,14 +78,14 @@ class ControladorAnimal:
         print(f'\n {tipo} | Nome | Raça')
         print('\n'*2 + ' Digite X para cancelar a operação.')
         print('----------------------------------------------------------')
-        nome = str(input('\n Digite o Nome: ')).capitalize()
+        nome = str(input('\n Digite o Nome: ')).title()
         if nome == 'X': return
 
         print('\n'*100 + '--------------------CADASTRO DE ANIMAL--------------------')
         print(f'\n {tipo} | {nome} | Raça')
         print('\n'*2 + ' Digite X para cancelar a operação.')
         print('----------------------------------------------------------')
-        raca = str(input('\n Digite a Raça: ')).capitalize()
+        raca = str(input('\n Digite a Raça: ')).title()
         if raca == 'X': return
 
         print('\n'*100 + '--------------------CADASTRO DE ANIMAL--------------------')
@@ -95,8 +100,8 @@ class ControladorAnimal:
             except Exception: print(' Valor inválido, por favor digite "S" ou "X"')
             else: break
 
-        if tipo == 'Cachorro': dadosGlobais.saveAnimal(Cachorro(len(dadosGlobais.animais)+1, tipo, nome, raca, [], None, tamanho))
-        if tipo == 'Gato': dadosGlobais.saveAnimal(Gato(len(dadosGlobais.animais)+1, tipo, nome, raca, [], None))
+        if tipo == 'Cachorro': dadosGlobais.saveAnimal(Cachorro(len(dadosGlobais.animais)+1, tipo, nome, raca, None, tamanho))
+        if tipo == 'Gato': dadosGlobais.saveAnimal(Gato(len(dadosGlobais.animais)+1, tipo, nome, raca, None))
 
         print('\n'*100 + '--------------------CADASTRO DE ANIMAL--------------------')
         print(f'\n {tipo} | {nome} | {raca}')
@@ -119,7 +124,8 @@ class ControladorAnimal:
         print(f' 1- Nome: {dadosGlobais.animais[escolha-1].nome}')
         print(f' 2- Raça: {dadosGlobais.animais[escolha-1].raca}')
         print(f' 3- Vacinas: {len(dadosGlobais.animais[escolha-1].vacinas)}')
-        print(f' 4- Dono: {dadosGlobais.animais[escolha-1].dono.cpf} | {dadosGlobais.animais[escolha-1].dono.nome}')
+        if dadosGlobais.animais[escolha-1].dono: print(f' 4- Dono: {dadosGlobais.animais[escolha-1].dono.cpf} | {dadosGlobais.animais[escolha-1].dono.nome}')
+        if not dadosGlobais.animais[escolha-1].dono: print(f' 4- Dono: Sem dono')
         if dadosGlobais.animais[escolha-1].tipo == 'Cachorro': print(f' 5- Tamanho: {dadosGlobais.animais[escolha-1].tamanho}')
         print('\n'*2 + ' Digite X para cancelar a operação.')
         print('--------------------------------------------------------')
@@ -137,7 +143,8 @@ class ControladorAnimal:
             print(f'\n Nome: {dadosGlobais.animais[escolha-1].nome}')
             print(f' Raça: {dadosGlobais.animais[escolha-1].raca}')
             print(f' Vacinas: {len(dadosGlobais.animais[escolha-1].vacinas)}')
-            print(f' Dono: {dadosGlobais.animais[escolha-1].dono.cpf} | {dadosGlobais.animais[escolha-1].dono.nome}')
+            if dadosGlobais.animais[escolha-1].dono: print(f' Dono: {dadosGlobais.animais[escolha-1].dono.cpf} | {dadosGlobais.animais[escolha-1].dono.nome}')
+            if not dadosGlobais.animais[escolha-1].dono: print(f' Dono: Sem dono')
             if dadosGlobais.animais[escolha-1].tipo == 'Cachorro': print(f' 5- Tamanho: {dadosGlobais.animais[escolha-1].tamanho}')
             print('\n'*2 + ' Digite X para cancelar a operação.')
             print('--------------------------------------------------------')
@@ -178,7 +185,7 @@ class ControladorAnimal:
             dado = self.tela.validaInput(min=1, max=2)
 
             if dado == 1: 
-                novoDado = str(input('\n Digite o tipo da vacina: ')).capitalize()
+                novoDado = str(input('\n Digite o tipo da vacina: ')).title()
                 if novoDado == 'X': return
                 dadosGlobais.animais[escolha-1].vacinas[vacina-1].tipo = novoDado
 
@@ -244,7 +251,7 @@ class ControladorAnimal:
             except Exception: print(' Valor inválido, por favor digite "S" ou "X"')
             else: break
 
-    def aplicarVacina(self, id):
+    def aplicarVacina(self, id = 0):
         if id != 0: animais = [id]
         else:
             animais = []
@@ -264,13 +271,13 @@ class ControladorAnimal:
                 if escolha == 'S': continue
                 if escolha == 'N': break
                 if escolha == 'X': return
-                if escolha == '*': animais.extend(animal for animal in dadosGlobais.animais if animal.id not in animais); break
+                if escolha == '*': animais.extend(animal for animal in dadosGlobais.animais if animal not in animais); break
 
         print('\n'*100 + '--------------------APLICAR VACINA--------------------')
         print(f'\n Tipo | 00/00/00 | Aplicação em {len(animais)} Animal(is)')
         print('\n'*2 + ' Digite X para cancelar a operação.')
         print('----------------------------------------------------------')
-        tipo = str(input('\n Digite o Tipo da Vacina aplicada: ')).capitalize()
+        tipo = str(input('\n Digite o Tipo da Vacina aplicada: ')).title()
         if tipo == 'X': return
 
         print('\n'*100 + '--------------------APLICAR VACINA--------------------')
@@ -293,19 +300,21 @@ class ControladorAnimal:
             else: break
 
         for animalRegistrado in dadosGlobais.animais:
-            if any(animal == animalRegistrado.id for animal in animais):
-                dadosGlobais.saveVacina(Vacina(tipo, data, animalRegistrado))
-                animalRegistrado.addVacina(dadosGlobais.vacinas[-1]); return
+            for vacinado in animais:
+                if vacinado == animalRegistrado:
+                    dadosGlobais.saveVacina(Vacina(tipo, data, animalRegistrado))
+                    animalRegistrado.addVacina(dadosGlobais.vacinas[-1])
+        return
             
     def validaAdocao(self, animal, cachorroGrande):
         if cachorroGrande:
             if animal.tipo == 'Cachorro':
                 if animal.tamanho == 'Grande': return False
         vacinasEncontradas = []
-        vacinasNecessarias = ['Raiva', 'Leptospirose', 'Hepatite Infecciosa']
-        for vacina in vacinasNecessarias:
-            if vacina in animal.vacinas.tipo: vacinasEncontradas.append(animal.vacinas.tipo)
-        if vacinasEncontradas.sort() == vacinasNecessarias and animal.dono == None: return True
+        for vacinaNecessaria in ['Hepatite Infecciosa', 'Leptospirose', 'Raiva']:
+            for vacina in animal.vacinas:
+                if vacina.tipo == vacinaNecessaria: vacinasEncontradas.append(vacina.tipo)
+        if vacinasEncontradas == ['Hepatite Infecciosa', 'Leptospirose', 'Raiva'] and animal.dono == None: return True
         return False
 
 
