@@ -1,4 +1,4 @@
-from entidade.doaradotar import AbastractDoacaoAdocao
+from entidade.doacaoadocao import AbastractDoacaoAdocao
 
 class Adocao(AbastractDoacaoAdocao):
     def __init__(self, pessoa: object, animal: object, data, assinatura: bool):
