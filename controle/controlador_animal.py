@@ -161,7 +161,7 @@ class ControladorAnimal:
         if dado == 3:
             print('\n'*100 + f'--------------------VACINAS DE {dadosGlobais.animais[escolha-1].nome}--------------------')
             print('\n 0- Adicionar Vacina')
-            for i in range(len(dadosGlobais.animais[escolha-1].vacinas)): print(f' {i+1}- {dadosGlobais.animais[escolha-1].vacinas[i].tipo} | {dadosGlobais.animais[escolha-1].vacinas[i].data[0]}/{dadosGlobais.animais[escolha-1].vacinas[i].data[1]}/{dadosGlobais.animais[escolha-1].vacinas[i].data[2]}')
+            for i in range(len(dadosGlobais.animais[escolha-1].vacinas)): print(f' {i+1}- {dadosGlobais.animais[escolha-1].vacinas[i].tipo} | {dadosGlobais.animais[escolha-1].vacinas[i].data.strftime("%d")}/{dadosGlobais.animais[escolha-1].vacinas[i].data.strftime("%m")}/{dadosGlobais.animais[escolha-1].vacinas[i].data.strftime("%y")}')
             print('\n'*2 + ' Digite X para cancelar a operação.')
             print('--------------------------------------------------------')
             vacina = self.tela.validaInput(max=len(dadosGlobais.animais[escolha-1].vacinas))
@@ -171,7 +171,7 @@ class ControladorAnimal:
 
             print('\n'*100 + f'--------------------VACINAS DE {dadosGlobais.animais[escolha-1].nome}--------------------')
             print(f'\n 1- {dadosGlobais.animais[escolha-1].vacinas[vacina-1].tipo}')
-            print(f' 2- {dadosGlobais.animais[escolha-1].vacinas[vacina-1].data[0]}/{dadosGlobais.animais[escolha-1].vacinas[vacina-1].data[1]}/{dadosGlobais.animais[escolha-1].vacinas[vacina-1].data[2]}')
+            print(f' 2- {dadosGlobais.animais[escolha-1].vacinas[vacina-1].data.strftime("%d")}/{dadosGlobais.animais[escolha-1].vacinas[vacina-1].data.strftime("%m")}/{dadosGlobais.animais[escolha-1].vacinas[vacina-1].data.strftime("%y")}')
             print('\n'*2 + ' Digite X para cancelar a operação.')
             print('--------------------------------------------------------')
             dado = self.tela.validaInput(min=1, max=2)
@@ -182,52 +182,10 @@ class ControladorAnimal:
                 dadosGlobais.animais[escolha-1].vacinas[vacina-1].tipo = novoDado
 
             if dado == 2:
-                while True:
-                    novoDado = str(input('\n Digite S se a vacina foi aplicada hoje ou N se foi aplicada em outro dia: ')).capitalize()
-                    if novoDado != 'S' and novoDado != 'N' and novoDado != 'X': print(' Valor inválido, por favor tente novamente')
-                    else: break
+                novoDado = self.tela.validaData(True)
                 if novoDado == 'X': return
-                if novoDado == 'S':
-                    dia = datetime.now().day
-                    if dia < 10: dia = '0' + str(dia)
-                    dia = str(dia)
 
-                    mes = datetime.now().month
-                    if mes < 10: mes = '0' + str(mes)
-                    mes = str(mes)
-
-                    ano = str(datetime.now().year)
-
-                if novoDado == 'N':
-                    while True:
-                        try:
-                            dia = str(self.tela.validaInput(min=1, max=31, msg='Digite o dia da aplicação da vacina'))
-                            if dia == 'X': return dia
-                            if len(dia) == 1: dia = "0" + dia
-
-                            mes = str(self.tela.validaInput(min=1, max=12, msg='Digite o mês da aplicação da vacina'))
-                            if mes == 'X': return mes
-                            if len(mes) == 1: mes = "0" + mes
-
-                            while True:
-                                try:
-                                    ano = str(input('\n Digite o ano da aplicação da vacina: '))
-                                    if ano.capitalize() == 'X': return ano
-                                    if not ano.isdigit() or len(ano) != 4: raise ValueError
-                                except Exception: print(' Valor inválido, por favor digite novamente')
-                                else: break
-                            
-                            data = date(int(ano), int(mes), int(dia))
-
-                            if (int(mes) == 2 and int(dia) == 29) and not (data.isocalendar()[1] == 9): raise ValueError
-
-                            if datetime.now().year < data.year or (datetime.now().year == data.year and datetime.now().month < data.month) or (datetime.now().year == data.year and datetime.now().month == data.month and datetime.now().day < data.day):
-                                raise ValueError
-
-                        except Exception: input('\n Data inválida, por favor clique ENTER para tentar novamente ')
-                        else: break
-
-                dadosGlobais.animais[escolha-1].vacinas[vacina-1].data = [dia, mes, ano]
+                dadosGlobais.animais[escolha-1].vacinas[vacina-1].data = novoDado
 
         if dado == 4:
             print('\n 1- Ninguém é dono do animal')
@@ -308,65 +266,21 @@ class ControladorAnimal:
                 if escolha == '*': animais.extend(animal for animal in dadosGlobais.animais if animal.id not in animais); break
 
         print('\n'*100 + '--------------------APLICAR VACINA--------------------')
-        print(f'\n Tipo | 00/00/00 | ID do(s) Animal(is): {len(animais)} Animal(is)')
+        print(f'\n Tipo | 00/00/00 | Aplicação em {len(animais)} Animal(is)')
         print('\n'*2 + ' Digite X para cancelar a operação.')
         print('----------------------------------------------------------')
         tipo = str(input('\n Digite o Tipo da Vacina aplicada: ')).capitalize()
         if tipo == 'X': return
 
         print('\n'*100 + '--------------------APLICAR VACINA--------------------')
-        print(f'\n {tipo} | 00/00/00 | ID do(s) Animal(is): {len(animais)} Animal(is)')
+        print(f'\n {tipo} | 00/00/00 | Aplicação em {len(animais)} Animal(is)')
         print('\n'*2 + ' Digite X para cancelar a operação.')
         print('----------------------------------------------------------')
-        while True:
-            data = str(input('\n Digite S se a vacina foi aplicada hoje ou N se foi aplicada em outro dia: ')).capitalize()
-            if data != 'S' and data != 'N' and data != 'X': print(' Valor inválido, por favor tente novamente')
-            else: break
+        data = self.tela.validaData(True)
         if data == 'X': return
-        if data == 'S':
-            dia = datetime.now().day
-            if dia < 10: dia = '0' + str(dia)
-            dia = str(dia)
-
-            mes = datetime.now().month
-            if mes < 10: mes = '0' + str(mes)
-            mes = str(mes)
-
-            ano = str(datetime.now().year)
-
-        if data == 'N':
-            while True:
-                try:
-                    dia = str(self.tela.validaInput(min=1, max=31, msg='Digite o dia da aplicação da vacina'))
-                    if dia == 'X': return dia
-                    if len(dia) == 1: dia = "0" + dia
-
-                    mes = str(self.tela.validaInput(min=1, max=12, msg='Digite o mês da aplicação da vacina'))
-                    if mes == 'X': return mes
-                    if len(mes) == 1: mes = "0" + mes
-
-                    while True:
-                        try:
-                            ano = str(input('\n Digite o ano da aplicação da vacina: '))
-                            if ano.capitalize() == 'X': return ano
-                            if not ano.isdigit() or len(ano) != 4: raise ValueError
-                        except Exception: print(' Valor inválido, por favor digite novamente')
-                        else: break
-                    
-                    data = date(int(ano), int(mes), int(dia))
-
-                    if (int(mes) == 2 and int(dia) == 29) and not (data.isocalendar()[1] == 9): raise ValueError
-
-                    if datetime.now().year < data.year or (datetime.now().year == data.year and datetime.now().month < data.month) or (datetime.now().year == data.year and datetime.now().month == data.month and datetime.now().day < data.day):
-                        raise ValueError
-
-                except Exception: input('\n Data inválida, por favor clique ENTER para tentar novamente ')
-                else: break
-
-        data = [dia, mes, ano]
 
         print('\n'*100 + '--------------------APLICAR VACINA--------------------')
-        print(f'\n {tipo} | {data[0]}/{data[1]}/{data[2]} | {len(animais)} Animal(is)')
+        print(f'\n {tipo} | {data.strftime("%d")}/{data.strftime("%m")}/{data.strftime("%y")} | Aplicação em {len(animais)} Animal(is)')
         print('\n'*2 + ' Digite X para cancelar a operação.')
         print('----------------------------------------------------------')
         while True:

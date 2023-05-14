@@ -1,7 +1,7 @@
 from entidade.doacaoadocao import AbastractDoacaoAdocao
 
 class Adocao(AbastractDoacaoAdocao):
-    def __init__(self, pessoa: object, animal: object, data, assinatura: bool):
+    def __init__(self, pessoa: object, animal: object, data: object, assinatura: bool):
         super().__init__(pessoa, animal, data)
         self.__assinatura = assinatura
 

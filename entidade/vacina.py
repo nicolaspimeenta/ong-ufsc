@@ -1,5 +1,5 @@
 class Vacina:
-    def __init__(self, tipo: str, data, animal: object):
+    def __init__(self, tipo: str, data: object, animal: object):
         self.__tipo = tipo
         self.__data = data
         self.__animal = animal

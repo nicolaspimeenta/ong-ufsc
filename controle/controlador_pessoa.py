@@ -1,10 +1,11 @@
 import copy
+import datetime
 from validate_docbr import CPF
+from dateutil.relativedelta import relativedelta
 from limite.tela_pessoa import TelaPessoa
 from entidade.pessoa import Pessoa
 from entidade.endereco import Endereco
 from entidade import dadosGlobais
-from datetime import date, datetime
 
 class ControladorPessoa:
     def __init__(self):
@@ -80,7 +81,7 @@ class ControladorPessoa:
         if dataNascimento == 'X': return
 
         print('\n'*100 + '--------------------CADASTRO DE PESSOA--------------------')
-        print(f'\n CPF: {cpf} | Nome: {nome} | CEP: {endereco.cep}, n° {endereco.numero} | Data de Nascimento: {dataNascimento[0]}/{dataNascimento[1]}/{dataNascimento[2]}')
+        print(f'\n CPF: {cpf} | Nome: {nome} | CEP: {endereco.cep}, n° {endereco.numero} | Data de Nascimento: {dataNascimento.strftime("%d")}/{dataNascimento.strftime("%m")}/{dataNascimento.strftime("%y")}')
         print('\n'*2 + ' Digite X para cancelar a operação.')
         print('----------------------------------------------------------')
         while True:
@@ -94,7 +95,7 @@ class ControladorPessoa:
         dadosGlobais.savePessoa(Pessoa(cpf, nome, dataNascimento, endereco))
 
         print('\n'*100 + '--------------------CADASTRO DE PESSOA--------------------')
-        print(f'\n CPF: {cpf} | Nome: {nome} | CEP: {endereco.cep}, n° {endereco.numero} | Data de Nascimento: {dataNascimento[0]}/{dataNascimento[1]}/{dataNascimento[2]}')
+        print(f'\n CPF: {cpf} | Nome: {nome} | CEP: {endereco.cep}, n° {endereco.numero} | Data de Nascimento: {dataNascimento.strftime("%d")}/{dataNascimento.strftime("%m")}/{dataNascimento.strftime("%y")}')
         print('\n'*2 + ' Cadastro realizado com sucesso.')
         print('----------------------------------------------------------')
         input('\n Clique ENTER para continuar: ')
@@ -113,7 +114,7 @@ class ControladorPessoa:
         print(f' 1- CPF: {dadosGlobais.pessoas[escolha-1].cpf}')
         print(f' 2- Nome: {dadosGlobais.pessoas[escolha-1].nome}')
         print(f' 3- CEP: {dadosGlobais.pessoas[escolha-1].endereco.cep} | n° {dadosGlobais.pessoas[escolha-1].endereco.numero} | {dadosGlobais.pessoas[escolha-1].endereco.tipo} | {dadosGlobais.pessoas[escolha-1].endereco.tamanho} | {dadosGlobais.pessoas[escolha-1].endereco.animais}')
-        print(f' 4- Data de Nascimento: {dadosGlobais.pessoas[escolha-1].dataNascimento[0]}/{dadosGlobais.pessoas[escolha-1].dataNascimento[1]}/{dadosGlobais.pessoas[escolha-1].dataNascimento[2]}')
+        print(f' 4- Data de Nascimento: {dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%d")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%m")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%y")}')
         print('\n'*2 + ' Digite X para cancelar a operação.')
         print('--------------------------------------------------------')
         dado = self.tela.validaInput(max=4)
@@ -124,7 +125,7 @@ class ControladorPessoa:
             print(f'\n CPF: {dadosGlobais.pessoas[escolha-1].cpf}')
             print(f' Nome: {dadosGlobais.pessoas[escolha-1].nome}')
             print(f' CEP: {dadosGlobais.pessoas[escolha-1].endereco.cep} | n° {dadosGlobais.pessoas[escolha-1].endereco.numero} | {dadosGlobais.pessoas[escolha-1].endereco.tipo} | {dadosGlobais.pessoas[escolha-1].endereco.tamanho} | {dadosGlobais.pessoas[escolha-1].endereco.animais}')
-            print(f' Data de Nascimento: {dadosGlobais.pessoas[escolha-1].dataNascimento[0]}/{dadosGlobais.pessoas[escolha-1].dataNascimento[1]}/{dadosGlobais.pessoas[escolha-1].dataNascimento[2]}')
+            print(f' Data de Nascimento: {dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%d")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%m")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%y")}')
             print('\n'*2 + ' Digite X para cancelar a operação.')
             print('--------------------------------------------------------')
             while True:
@@ -159,7 +160,7 @@ class ControladorPessoa:
         print(f'\n CPF: {dadosGlobais.pessoas[escolha-1].cpf}')
         print(f' Nome: {dadosGlobais.pessoas[escolha-1].nome}')
         print(f' CEP: {dadosGlobais.pessoas[escolha-1].endereco.cep} | n° {dadosGlobais.pessoas[escolha-1].endereco.numero} | {dadosGlobais.pessoas[escolha-1].endereco.tipo} | {dadosGlobais.pessoas[escolha-1].endereco.tamanho} | {dadosGlobais.pessoas[escolha-1].endereco.animais}')
-        print(f' Data de Nascimento: {dadosGlobais.pessoas[escolha-1].dataNascimento[0]}/{dadosGlobais.pessoas[escolha-1].dataNascimento[1]}/{dadosGlobais.pessoas[escolha-1].dataNascimento[2]}')
+        print(f' Data de Nascimento: {dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%d")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%m")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%y")}')
         print('\n'*2 + ' Digite X para cancelar as alterações.')
         print('--------------------------------------------------------')
         while True:
@@ -262,62 +263,11 @@ class ControladorPessoa:
             
     def validarIdade(self):
         while True:
-            try:
-                print('\n'*100 + '--------------------IDADE--------------------')
-                print('\n 00 / 00 / 0000')
-                print('\n'*2 + ' Digite X para cancelar a operação.')
-                print('------------------------------------------------')
-                dia = str(self.tela.validaInput(min=1, max=31, msg='Digite o dia da data de nascimento'))
-                if dia == 'X': return dia
-                if len(dia) == 1: dia = "0" + dia
-
-                print('\n'*100 + '--------------------IDADE--------------------')
-                print(f'\n {dia} / 00 / 0000')
-                print('\n'*2 + ' Digite X para cancelar a operação.')
-                print('------------------------------------------------')
-                mes = str(self.tela.validaInput(min=1, max=12, msg='Digite o dia da data de nascimento'))
-                if mes == 'X': return mes
-                if len(mes) == 1: mes = "0" + mes
-
-                print('\n'*100 + '--------------------IDADE--------------------')
-                print(f'\n {dia} / {mes} / 0000')
-                print('\n'*2 + ' Digite X para cancelar a operação.')
-                print('------------------------------------------------')
-                while True:
-                    try:
-                        ano = str(input('\n Digite o ano da data de nascimento: ')).capitalize()
-                        if ano == 'X': return ano
-                        if not ano.isdigit() or len(ano) != 4: raise ValueError
-                    except Exception: print(' Valor inválido, por favor digite novamente')
-                    else: break
-
-                print('\n'*100 + '--------------------IDADE--------------------')
-                print(f'\n {dia} / {mes} / {ano}')
-                print('\n'*2 + ' Digite X para cancelar a operação.')
-                print('------------------------------------------------')
-                
-                while True:
-                    try:
-                        confirma = str(input('\n Digite S para confirmar: ')).capitalize()
-                        if confirma == 'X': return confirma
-                        if confirma != 'S': raise ValueError
-                    except Exception: print(' Valor inválido, por favor digite "S" ou "X"')
-                    else: break
-                
-                data = date(int(ano), int(mes), int(dia))
-
-                if (int(mes) == 2 and int(dia) == 29) and not (data.isocalendar()[1] == 9): raise ValueError
-
-                if datetime.now().year < data.year or (datetime.now().year == data.year and datetime.now().month < data.month) or (datetime.now().year == data.year and datetime.now().month == data.month and datetime.now().day < data.day):
-                    raise ValueError
-
-                idade = datetime.now().year - data.year
-                if datetime.now().month < data.month or (datetime.now().month == data.month and datetime.now().day < data.day): idade -= 1
-                if idade < 18: print(' Não é permitido cadastrar menores de 18 anos.'); raise ValueError
-
-                return [dia, mes, ano]
-            
-            except Exception: input('\n Data inválida, por favor clique ENTER para tentar novamente ')
+            dataNascimento = self.tela.validaData(False)
+            if dataNascimento == 'X': break
+            if dataNascimento > (datetime.date.today() - relativedelta(years=18)): print(' Não é permitido cadastrar menores de 18 anos, por favor tente novamente')
+            else: break
+        return dataNascimento
 
     def validaAdocao(self, pessoa, cachorroGrande):
         for doacao in dadosGlobais.doacoes:
