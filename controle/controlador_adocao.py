@@ -70,7 +70,7 @@ class ControladorAdocao:
         if data == 'X': return
 
         print('\n'*100 + '--------------------ADOÇÃO DE ANIMAL--------------------')
-        print(f'\n Animal: {animal.nome} ({animal.id}) | Adotante: {pessoa.nome} ({pessoa.cpf}) | Data: {data.strftime("%d")}/{data.strftime("%m")}/{data.strftime("%y")}')
+        print(f'\n Animal: {animal.nome} ({animal.id}) | Adotante: {pessoa.nome} ({pessoa.cpf}) | Data: {data.strftime("%d")}/{data.strftime("%m")}/{data.strftime("%Y")}')
         print('\n'*2 + ' Digite X para cancelar a operação.')
         print('----------------------------------------------------------')
         while True:
@@ -82,7 +82,7 @@ class ControladorAdocao:
             else: break
 
         print('\n'*100 + '--------------------ADOÇÃO DE ANIMAL--------------------')
-        print(f'\n Animal: {animal.nome} ({animal.id}) | Adotante: {pessoa.nome} ({pessoa.cpf}) | Data: {data.strftime("%d")}/{data.strftime("%m")}/{data.strftime("%y")}')
+        print(f'\n Animal: {animal.nome} ({animal.id}) | Adotante: {pessoa.nome} ({pessoa.cpf}) | Data: {data.strftime("%d")}/{data.strftime("%m")}/{data.strftime("%Y")}')
         print('\n'*2 + ' Adoção realizada com sucesso.')
         print('----------------------------------------------------------')
         input('Clique ENTER para continuar')
@@ -96,7 +96,7 @@ class ControladorAdocao:
         print('\n 0- Cadastrar uma nova adoção')
         if len(dadosGlobais.adocoes) == 0: print(' Não há nenhuma adoção cadastrada no sistema.' + '') 
         else:
-            for i in range(len(dadosGlobais.adocoes)): print(f' {i+1}- {dadosGlobais.adocoes[i].data.strftime("%d")}/{dadosGlobais.adocoes[i].data.strftime("%m")}/{dadosGlobais.adocoes[i].data.strftime("%y")} {dadosGlobais.adocoes[i].pessoa.nome} ({dadosGlobais.adocoes[i].pessoa.cpf}) adotou {dadosGlobais.adocoes[i].animal.nome} ({dadosGlobais.adocoes[i].animal.id})')
+            for i in range(len(dadosGlobais.adocoes)): print(f' {i+1}- {dadosGlobais.adocoes[i].data.strftime("%d")}/{dadosGlobais.adocoes[i].data.strftime("%m")}/{dadosGlobais.adocoes[i].data.strftime("%Y")} {dadosGlobais.adocoes[i].pessoa.nome} ({dadosGlobais.adocoes[i].pessoa.cpf}) adotou {dadosGlobais.adocoes[i].animal.nome} ({dadosGlobais.adocoes[i].animal.id})')
         print('\n'*2 + ' Digite X para cancelar a operação.')
         print('---------------------------------------------------------------------')
         escolha = self.tela.validaInput(len(dadosGlobais.adocoes))
@@ -109,7 +109,7 @@ class ControladorAdocao:
         print('\n 0- Excluir Cadastro')
         print(f' 1- Adotante: {dadosGlobais.adocoes[escolha-1].pessoa.nome} ({dadosGlobais.adocoes[escolha-1].pessoa.cpf})')
         print(f' 2- Animal Adotado: {dadosGlobais.adocoes[escolha-1].animal.nome} ({dadosGlobais.adocoes[escolha-1].animal.id})')
-        print(f' 3- Data: {dadosGlobais.adocoes[escolha-1].data.strftime("%d")}/{dadosGlobais.adocoes[escolha-1].data.strftime("%m")}/{dadosGlobais.adocoes[escolha-1].data.strftime("%y")}')
+        print(f' 3- Data: {dadosGlobais.adocoes[escolha-1].data.strftime("%d")}/{dadosGlobais.adocoes[escolha-1].data.strftime("%m")}/{dadosGlobais.adocoes[escolha-1].data.strftime("%Y")}')
         print('\n'*2 + ' Digite X para cancelar a operação.')
         print('--------------------------------------------------------')
         dado = self.tela.validaInput(3)
@@ -119,7 +119,7 @@ class ControladorAdocao:
             print('\n'*100 + '--------------------EXCLUIR CADASTRO--------------------')
             print(f'\n Adotante: {dadosGlobais.adocoes[escolha-1].pessoa.nome} ({dadosGlobais.adocoes[escolha-1].pessoa.cpf})')
             print(f' Animal Adotado: {dadosGlobais.adocoes[escolha-1].animal.nome} ({dadosGlobais.adocoes[escolha-1].animal.id})')
-            print(f' Data: {dadosGlobais.adocoes[escolha-1].data.strftime("%d")}/{dadosGlobais.adocoes[escolha-1].data.strftime("%m")}/{dadosGlobais.adocoes[escolha-1].data.strftime("%y")}')
+            print(f' Data: {dadosGlobais.adocoes[escolha-1].data.strftime("%d")}/{dadosGlobais.adocoes[escolha-1].data.strftime("%m")}/{dadosGlobais.adocoes[escolha-1].data.strftime("%Y")}')
             print('\n'*2 + ' Digite X para cancelar a operação.')
             print('--------------------------------------------------------')
             while True:
@@ -161,7 +161,7 @@ class ControladorAdocao:
         print('\n'*100 + '--------------------ALTERAR CADASTRO--------------------')
         print(f'\n Adotante: {dadosGlobais.adocoes[escolha-1].pessoa.nome} ({dadosGlobais.adocoes[escolha-1].pessoa.cpf})')
         print(f' Animal Adotado: {dadosGlobais.adocoes[escolha-1].animal.nome} ({dadosGlobais.adocoes[escolha-1].animal.id})')
-        print(f' Data: {dadosGlobais.adocoes[escolha-1].data.strftime("%d")}/{dadosGlobais.adocoes[escolha-1].data.strftime("%m")}/{dadosGlobais.adocoes[escolha-1].data.strftime("%y")}')
+        print(f' Data: {dadosGlobais.adocoes[escolha-1].data.strftime("%d")}/{dadosGlobais.adocoes[escolha-1].data.strftime("%m")}/{dadosGlobais.adocoes[escolha-1].data.strftime("%Y")}')
         print('\n'*2 + ' Digite X para cancelar as alterações.')
         print('--------------------------------------------------------')
         while True:

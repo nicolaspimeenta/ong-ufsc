@@ -49,14 +49,14 @@ class ControladorRelatorio:
             while True:
                 try:
                     print('\n'*100 + '--------------------INTERVALO ESPECÍFICO--------------------')
-                    print('\n Data Mínima: 00 / 00 / 0000')
+                    print('\n Data Mínima: 00/00/0000')
                     print('\n'*2 + ' Digite X para cancelar a operação.')
                     print('------------------------------------------------------------')
                     dataMinima = self.tela.validaData(True)
                     if dataMinima == 'X': return
 
                     print('\n'*100 + '--------------------INTERVALO ESPECÍFICO--------------------')
-                    print(f'\n Data Mínima: {dataMinima.strftime("%d")} / {dataMinima.strftime("%m")} / {dataMinima.strftime("%y")}')
+                    print(f'\n Data Mínima: {dataMinima.strftime("%d")}/{dataMinima.strftime("%m")}/{dataMinima.strftime("%Y")}')
                     print(' Data Máxima: 00 / 00 / 0000')
                     print('\n'*2 + ' Digite X para cancelar a operação.')
                     print('------------------------------------------------------------')
@@ -65,8 +65,8 @@ class ControladorRelatorio:
 
                     if dataMinima < dataMaxima: raise ValueError
                     print('\n'*100 + '--------------------INTERVALO ESPECÍFICO--------------------')
-                    print(f'\n Data Mínima: {dataMinima.strftime("%d")} / {dataMinima.strftime("%m")} / {dataMinima.strftime("%y")}')
-                    print(f' Data Máxima: {dataMaxima.strftime("%d")} / {dataMaxima.strftime("%m")} / {dataMaxima.strftime("%y")}')
+                    print(f'\n Data Mínima: {dataMinima.strftime("%d")}/{dataMinima.strftime("%m")}/{dataMinima.strftime("%Y")}')
+                    print(f' Data Máxima: {dataMaxima.strftime("%d")}/{dataMaxima.strftime("%m")}/{dataMaxima.strftime("%Y")}')
                     print('\n'*2 + ' Digite X para cancelar a operação.')
                     print('------------------------------------------------------------')
                     while True:
@@ -77,22 +77,22 @@ class ControladorRelatorio:
                         except Exception: print(' Valor inválido, por favor digite "S" ou "X"')
                         else: break
 
-                except Exception: input('\n Data inválida, por favor clique ENTER para tentar novamente ')
+                except Exception: input('\n Intervalo de data inválido, por favor clique ENTER para tentar novamente ')
                 else: break
 
-        if escolha == 5: dados = sorted(dados, key=lambda obj: datetime.date( int(obj.data[2]), int(obj.data[1]), int(obj.data[0]) ))
+        if escolha == 5: dados = sorted(dados, key=lambda obj: obj.data)
         if escolha != 5:
-            dadosFiltrados = [dado for dado in dados if self.filtrarDatas( dataAtual=datetime.date( int(dado.data[2]), int(dado.data[1]), int(dado.data[0]) ), dataMaior=dataMinima, dataMenor=dataMaxima)]
-            dados = sorted(dadosFiltrados, key=lambda obj: datetime.date( int(obj.data[2]), int(obj.data[1]), int(obj.data[0]) ))
+            dadosFiltrados = [dado for dado in dados if self.filtrarDatas(data=dado.data, dataMaior=dataMinima, dataMenor=dataMaxima)]
+            dados = sorted(dadosFiltrados, key=lambda obj: obj.data)
         
         print('\n'*100 + '--------------------RELATÓRIO--------------------')
         for dado in dados:
-            if hasattr(dado, 'tipo'): print(f' {dado.data[0]}/{dado.data[1]}/{dado.data[2]} - Vacina "{dado.tipo}" foi aplicada em {dado.animal.nome} ({dado.animal.id})')
-            if hasattr(dado, 'motivo'): print(f' {dado.data[0]}/{dado.data[1]}/{dado.data[2]} - {dado.pessoa.nome} ({dado.pessoa.cpf}) doou {dado.animal.nome} ({dado.animal.id})')
-            if hasattr(dado, 'assinatura'): print(f' {dado.data[0]}/{dado.data[1]}/{dado.data[2]} - {dado.pessoa.nome} ({dado.pessoa.cpf}) adotou {dado.animal.nome} ({dado.animal.id})')
+            if hasattr(dado, 'tipo'): print(f' {dado.data.strftime("%d")}/{dado.data.strftime("%m")}/{dado.data.strftime("%Y")} - Vacina "{dado.tipo}" foi aplicada em {dado.animal.nome} ({dado.animal.id})')
+            if hasattr(dado, 'motivo'): print(f' {dado.data.strftime("%d")}/{dado.data.strftime("%m")}/{dado.data.strftime("%Y")} - {dado.pessoa.nome} ({dado.pessoa.cpf}) doou {dado.animal.nome} ({dado.animal.id})')
+            if hasattr(dado, 'assinatura'): print(f' {dado.data.strftime("%d")}/{dado.data.strftime("%m")}/{dado.data.strftime("%Y")} - {dado.pessoa.nome} ({dado.pessoa.cpf}) adotou {dado.animal.nome} ({dado.animal.id})')
         print('--------------------------------------------')
         input(' Clique ENTER para retornar.')
 
-    def filtrarDatas(self, dataAtual, dataMenor, dataMaior):
-        if dataMenor <= dataAtual <= dataMaior : return True
+    def filtrarDatas(self, data, dataMenor, dataMaior):
+        if dataMenor <= data <= dataMaior : return True
         return False

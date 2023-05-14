@@ -26,8 +26,8 @@ class ControladorDoacao:
         print('----------------------------------------------------------')
         input('Clique ENTER para registrar o Doador')
 
-        self.controladorPessoa.listarPessoa('Digite o número da pessoa que irá doar o animal. \n')
-        escolha = self.tela.validaInput(len(dadosGlobais.pessoas))
+        self.controladorPessoa.listarPessoa()
+        escolha = self.tela.validaInput(len(dadosGlobais.pessoas), 'Digite o número da pessoa que irá doar o animal')
         if escolha == 'X': return
         if escolha == 0: 
             tamanhoAnterior = len(dadosGlobais.pessoas)
@@ -61,7 +61,7 @@ class ControladorDoacao:
         if data == 'X': return
 
         print('\n'*100 + '--------------------DOAÇÃO DE ANIMAL--------------------')
-        print(f'\n Doador: {dadosGlobais.pessoas[escolha-1].nome} | Animal: {dadosGlobais.animais[-1].nome} | Motivo: {motivo} | Data: {data.strftime("%d")}/{data.strftime("%m")}/{data.strftime("%y")}')
+        print(f'\n Doador: {dadosGlobais.pessoas[escolha-1].nome} | Animal: {dadosGlobais.animais[-1].nome} | Motivo: {motivo} | Data: {data.strftime("%d")}/{data.strftime("%m")}/{data.strftime("%Y")}')
         print('\n'*2 + ' Digite X para cancelar a operação.')
         print('----------------------------------------------------------')
         while True:
@@ -73,7 +73,7 @@ class ControladorDoacao:
             else: break
 
         print('\n'*100 + '--------------------DOAÇÃO DE ANIMAL--------------------')
-        print(f'\n Doador: {dadosGlobais.pessoas[escolha-1].nome} | Animal: {dadosGlobais.animais[-1].nome} | Motivo: {motivo} | Data: {data.strftime("%d")}/{data.strftime("%m")}/{data.strftime("%y")}')
+        print(f'\n Doador: {dadosGlobais.pessoas[escolha-1].nome} | Animal: {dadosGlobais.animais[-1].nome} | Motivo: {motivo} | Data: {data.strftime("%d")}/{data.strftime("%m")}/{data.strftime("%Y")}')
         print('\n'*2 + ' Doação realizada com sucesso.')
         print('----------------------------------------------------------')
         input('Clique ENTER para continuar')
@@ -85,7 +85,7 @@ class ControladorDoacao:
         print('\n 0- Cadastrar uma nova doação')
         if len(dadosGlobais.doacoes) == 0: print('\n Não há nenhuma doação cadastrada no sistema.' + '') 
         else:
-            for i in range(len(dadosGlobais.doacoes)): print(f' {i+1}- {dadosGlobais.doacoes[i].data.strftime("%d")}/{dadosGlobais.doacoes[i].data.strftime("%m")}/{dadosGlobais.doacoes[i].data.strftime("%y")} {dadosGlobais.doacoes[i].pessoa.nome} ({dadosGlobais.doacoes[i].pessoa.cpf}) doou {dadosGlobais.doacoes[i].animal.nome} ({dadosGlobais.doacoes[i].animal.id})')
+            for i in range(len(dadosGlobais.doacoes)): print(f' {i+1}- {dadosGlobais.doacoes[i].data.strftime("%d")}/{dadosGlobais.doacoes[i].data.strftime("%m")}/{dadosGlobais.doacoes[i].data.strftime("%Y")} {dadosGlobais.doacoes[i].pessoa.nome} ({dadosGlobais.doacoes[i].pessoa.cpf}) doou {dadosGlobais.doacoes[i].animal.nome} ({dadosGlobais.doacoes[i].animal.id})')
         print('\n'*2 + ' Digite X para cancelar a operação.')
         print('---------------------------------------------------------------------')
         escolha = self.tela.validaInput(len(dadosGlobais.doacoes))
@@ -99,7 +99,7 @@ class ControladorDoacao:
         print(f' 1- Doador: {dadosGlobais.doacoes[escolha-1].pessoa.nome} ({dadosGlobais.doacoes[escolha-1].pessoa.cpf})')
         print(f' 2- Animal Doado: {dadosGlobais.doacoes[escolha-1].animal.nome} ({dadosGlobais.doacoes[escolha-1].animal.id})')
         print(f' 3- Motivo: {dadosGlobais.doacoes[escolha-1].motivo}')
-        print(f' 4- Data: {dadosGlobais.doacoes[escolha-1].data.strftime("%d")}/{dadosGlobais.doacoes[escolha-1].data.strftime("%m")}/{dadosGlobais.doacoes[escolha-1].data.strftime("%y")}')
+        print(f' 4- Data: {dadosGlobais.doacoes[escolha-1].data.strftime("%d")}/{dadosGlobais.doacoes[escolha-1].data.strftime("%m")}/{dadosGlobais.doacoes[escolha-1].data.strftime("%Y")}')
         print('\n'*2 + ' Digite X para cancelar a operação.')
         print('--------------------------------------------------------')
         dado = self.tela.validaInput(4)
@@ -110,7 +110,7 @@ class ControladorDoacao:
             print(f'\n Doador: {dadosGlobais.doacoes[escolha-1].pessoa.nome} ({dadosGlobais.doacoes[escolha-1].pessoa.cpf})')
             print(f' Animal Doado: {dadosGlobais.doacoes[escolha-1].animal.nome} ({dadosGlobais.doacoes[escolha-1].animal.id})')
             print(f' Motivo: {dadosGlobais.doacoes[escolha-1].motivo}')
-            print(f' Data: {dadosGlobais.doacoes[escolha-1].data.strftime("%d")}/{dadosGlobais.doacoes[escolha-1].data.strftime("%m")}/{dadosGlobais.doacoes[escolha-1].data.strftime("%y")}')
+            print(f' Data: {dadosGlobais.doacoes[escolha-1].data.strftime("%d")}/{dadosGlobais.doacoes[escolha-1].data.strftime("%m")}/{dadosGlobais.doacoes[escolha-1].data.strftime("%Y")}')
             print('\n'*2 + ' Digite X para cancelar a operação.')
             print('--------------------------------------------------------')
             while True:
@@ -122,8 +122,8 @@ class ControladorDoacao:
                 else: dadosGlobais.doacoes.pop(escolha-1); return
 
         if dado == 1:
-            self.controladorPessoa.listarPessoa('Digite o número da pessoa que doou o animal. \n')
-            novoDado = self.tela.validaInput(len(dadosGlobais.pessoas))
+            self.controladorPessoa.listarPessoa()
+            novoDado = self.tela.validaInput(max=len(dadosGlobais.pessoas), msg='Digite o número da pessoa que doou o animal')
             if novoDado == 'X': return
             if novoDado == 0:
                 tamanhoAnterior = len(dadosGlobais.pessoas)
@@ -156,7 +156,7 @@ class ControladorDoacao:
         print(f'\n Doador: {dadosGlobais.doacoes[escolha-1].pessoa.nome} ({dadosGlobais.doacoes[escolha-1].pessoa.cpf})')
         print(f' Animal Doado: {dadosGlobais.doacoes[escolha-1].animal.nome} ({dadosGlobais.doacoes[escolha-1].animal.id})')
         print(f' Motivo: {dadosGlobais.doacoes[escolha-1].motivo}')
-        print(f' Data: {dadosGlobais.doacoes[escolha-1].data.strftime("%d")}/{dadosGlobais.doacoes[escolha-1].data.strftime("%m")}/{dadosGlobais.doacoes[escolha-1].data.strftime("%y")}')
+        print(f' Data: {dadosGlobais.doacoes[escolha-1].data.strftime("%d")}/{dadosGlobais.doacoes[escolha-1].data.strftime("%m")}/{dadosGlobais.doacoes[escolha-1].data.strftime("%Y")}')
         print('\n'*2 + ' Digite X para cancelar as alterações.')
         print('--------------------------------------------------------')
         while True:

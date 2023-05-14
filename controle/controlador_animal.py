@@ -5,7 +5,6 @@ from entidade.vacina import Vacina
 from entidade import dadosGlobais
 from entidade.cachorro import Cachorro
 from entidade.gato import Gato
-from datetime import date, datetime
 
 class ControladorAnimal:
     def __init__(self):
@@ -17,8 +16,9 @@ class ControladorAnimal:
             self.tela.abreTela()
             escolha = self.tela.validaInput(min=1, max=2)
             if escolha == 'X': return
-            if escolha == 1: self.gerenciarAnimal()
-            if escolha == 2: self.aplicarVacina()
+            if escolha == 1: self.cadastrarAnimal()
+            if escolha == 2: self.gerenciarAnimal()
+            if escolha == 3: self.aplicarVacina()
 
     def listarAnimal(self, msg = ' ', adocao = False, cachorroGrande = False):
         if adocao:
@@ -53,6 +53,7 @@ class ControladorAnimal:
         print('\n'*2 + ' Digite X para cancelar a operação.')
         print('----------------------------------------------------------')
         tipo = self.tela.validaInput(max=2)
+        if tipo == 'X': return
         if tipo == 1:
             print('\n'*100 + '--------------------TAMANHO DO CACHORRO--------------------')
             print('\n 1- Pequeno')
@@ -105,9 +106,9 @@ class ControladorAnimal:
 
 
     def gerenciarAnimal(self):
-        self.listarAnimal(msg='Digite o número do cadastro que deseja alterar ou excluir. \n')
+        self.listarAnimal()
 
-        escolha = self.tela.validaInput(max=len(dadosGlobais.animais))
+        escolha = self.tela.validaInput(max=len(dadosGlobais.animais), msg='Digite o número do cadastro que deseja alterar ou excluir')
 
         if escolha == 'X': return
         if escolha == 0: self.cadastrarAnimal(); return
@@ -117,7 +118,7 @@ class ControladorAnimal:
         print('\n 0- Excluir Cadastro')
         print(f' 1- Nome: {dadosGlobais.animais[escolha-1].nome}')
         print(f' 2- Raça: {dadosGlobais.animais[escolha-1].raca}')
-        print(f' 3- Vacinas: {dadosGlobais.animais[escolha-1].vacinas}')
+        print(f' 3- Vacinas: {len(dadosGlobais.animais[escolha-1].vacinas)}')
         print(f' 4- Dono: {dadosGlobais.animais[escolha-1].dono.cpf} | {dadosGlobais.animais[escolha-1].dono.nome}')
         if dadosGlobais.animais[escolha-1].tipo == 'Cachorro': print(f' 5- Tamanho: {dadosGlobais.animais[escolha-1].tamanho}')
         print('\n'*2 + ' Digite X para cancelar a operação.')
@@ -161,7 +162,7 @@ class ControladorAnimal:
         if dado == 3:
             print('\n'*100 + f'--------------------VACINAS DE {dadosGlobais.animais[escolha-1].nome}--------------------')
             print('\n 0- Adicionar Vacina')
-            for i in range(len(dadosGlobais.animais[escolha-1].vacinas)): print(f' {i+1}- {dadosGlobais.animais[escolha-1].vacinas[i].tipo} | {dadosGlobais.animais[escolha-1].vacinas[i].data.strftime("%d")}/{dadosGlobais.animais[escolha-1].vacinas[i].data.strftime("%m")}/{dadosGlobais.animais[escolha-1].vacinas[i].data.strftime("%y")}')
+            for i in range(len(dadosGlobais.animais[escolha-1].vacinas)): print(f' {i+1}- {dadosGlobais.animais[escolha-1].vacinas[i].tipo} | {dadosGlobais.animais[escolha-1].vacinas[i].data.strftime("%d")}/{dadosGlobais.animais[escolha-1].vacinas[i].data.strftime("%m")}/{dadosGlobais.animais[escolha-1].vacinas[i].data.strftime("%Y")}')
             print('\n'*2 + ' Digite X para cancelar a operação.')
             print('--------------------------------------------------------')
             vacina = self.tela.validaInput(max=len(dadosGlobais.animais[escolha-1].vacinas))
@@ -171,7 +172,7 @@ class ControladorAnimal:
 
             print('\n'*100 + f'--------------------VACINAS DE {dadosGlobais.animais[escolha-1].nome}--------------------')
             print(f'\n 1- {dadosGlobais.animais[escolha-1].vacinas[vacina-1].tipo}')
-            print(f' 2- {dadosGlobais.animais[escolha-1].vacinas[vacina-1].data.strftime("%d")}/{dadosGlobais.animais[escolha-1].vacinas[vacina-1].data.strftime("%m")}/{dadosGlobais.animais[escolha-1].vacinas[vacina-1].data.strftime("%y")}')
+            print(f' 2- {dadosGlobais.animais[escolha-1].vacinas[vacina-1].data.strftime("%d")}/{dadosGlobais.animais[escolha-1].vacinas[vacina-1].data.strftime("%m")}/{dadosGlobais.animais[escolha-1].vacinas[vacina-1].data.strftime("%Y")}')
             print('\n'*2 + ' Digite X para cancelar a operação.')
             print('--------------------------------------------------------')
             dado = self.tela.validaInput(min=1, max=2)
@@ -229,7 +230,7 @@ class ControladorAnimal:
         print('\n'*100 + '--------------------ALTERAR CADASTRO--------------------')
         print(f'\n Nome: {dadosGlobais.animais[escolha-1].nome}')
         print(f' Raça: {dadosGlobais.animais[escolha-1].raca}')
-        print(f' Vacinas: {dadosGlobais.animais[escolha-1].vacinas}')
+        print(f' Vacinas: {len(dadosGlobais.animais[escolha-1].vacinas)}')
         if dadosGlobais.animais[escolha-1].dono: print(f' Dono: {dadosGlobais.animais[escolha-1].dono.cpf} | {dadosGlobais.animais[escolha-1].dono.nome}')
         if not dadosGlobais.animais[escolha-1].dono: print(f' Dono: Sem Dono')
         if dadosGlobais.animais[escolha-1].tipo == 'Cachorro': print(f' 5- Tamanho: {dadosGlobais.animais[escolha-1].tamanho}')
@@ -248,9 +249,9 @@ class ControladorAnimal:
         else:
             animais = []
             while True:
-                self.listarAnimal(msg='Digite o número do animal para registrar uma vacina:')
+                self.listarAnimal()
                 print(f'\n {len(animais)} animal(is) escolhido(s)')
-                escolha = self.tela.validaInput(max=len(dadosGlobais.animais))
+                escolha = self.tela.validaInput(max=len(dadosGlobais.animais), msg='Digite o número do animal para registrar uma vacina')
                 if escolha == 'X': return
                 if escolha == 0: self.cadastrarAnimal(); return
                 if dadosGlobais.animais[escolha-1].id in animais: print(' Você já escolheu este animal, por favor escolha outro.'); continue
@@ -280,7 +281,7 @@ class ControladorAnimal:
         if data == 'X': return
 
         print('\n'*100 + '--------------------APLICAR VACINA--------------------')
-        print(f'\n {tipo} | {data.strftime("%d")}/{data.strftime("%m")}/{data.strftime("%y")} | Aplicação em {len(animais)} Animal(is)')
+        print(f'\n {tipo} | {data.strftime("%d")}/{data.strftime("%m")}/{data.strftime("%Y")} | Aplicação em {len(animais)} Animal(is)')
         print('\n'*2 + ' Digite X para cancelar a operação.')
         print('----------------------------------------------------------')
         while True:

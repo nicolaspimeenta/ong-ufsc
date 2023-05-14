@@ -81,7 +81,7 @@ class ControladorPessoa:
         if dataNascimento == 'X': return
 
         print('\n'*100 + '--------------------CADASTRO DE PESSOA--------------------')
-        print(f'\n CPF: {cpf} | Nome: {nome} | CEP: {endereco.cep}, n° {endereco.numero} | Data de Nascimento: {dataNascimento.strftime("%d")}/{dataNascimento.strftime("%m")}/{dataNascimento.strftime("%y")}')
+        print(f'\n CPF: {cpf} | Nome: {nome} | CEP: {endereco.cep}, n° {endereco.numero} | Data de Nascimento: {dataNascimento.strftime("%d")}/{dataNascimento.strftime("%m")}/{dataNascimento.strftime("%Y")}')
         print('\n'*2 + ' Digite X para cancelar a operação.')
         print('----------------------------------------------------------')
         while True:
@@ -95,15 +95,15 @@ class ControladorPessoa:
         dadosGlobais.savePessoa(Pessoa(cpf, nome, dataNascimento, endereco))
 
         print('\n'*100 + '--------------------CADASTRO DE PESSOA--------------------')
-        print(f'\n CPF: {cpf} | Nome: {nome} | CEP: {endereco.cep}, n° {endereco.numero} | Data de Nascimento: {dataNascimento.strftime("%d")}/{dataNascimento.strftime("%m")}/{dataNascimento.strftime("%y")}')
+        print(f'\n CPF: {cpf} | Nome: {nome} | CEP: {endereco.cep}, n° {endereco.numero} | Data de Nascimento: {dataNascimento.strftime("%d")}/{dataNascimento.strftime("%m")}/{dataNascimento.strftime("%Y")}')
         print('\n'*2 + ' Cadastro realizado com sucesso.')
         print('----------------------------------------------------------')
         input('\n Clique ENTER para continuar: ')
 
     def gerenciarPessoa(self):
-        self.listarPessoa(msg='Digite o número do cadastro que deseja alterar ou excluir. \n')
+        self.listarPessoa()
 
-        escolha = self.tela.validaInput(max=len(dadosGlobais.pessoas))
+        escolha = self.tela.validaInput(max=len(dadosGlobais.pessoas), msg='Digite o número do cadastro que deseja alterar ou excluir')
 
         if escolha == 'X': return
         if escolha == 0: self.cadastrarPessoa(); return
@@ -114,7 +114,7 @@ class ControladorPessoa:
         print(f' 1- CPF: {dadosGlobais.pessoas[escolha-1].cpf}')
         print(f' 2- Nome: {dadosGlobais.pessoas[escolha-1].nome}')
         print(f' 3- CEP: {dadosGlobais.pessoas[escolha-1].endereco.cep} | n° {dadosGlobais.pessoas[escolha-1].endereco.numero} | {dadosGlobais.pessoas[escolha-1].endereco.tipo} | {dadosGlobais.pessoas[escolha-1].endereco.tamanho} | {dadosGlobais.pessoas[escolha-1].endereco.animais}')
-        print(f' 4- Data de Nascimento: {dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%d")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%m")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%y")}')
+        print(f' 4- Data de Nascimento: {dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%d")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%m")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%Y")}')
         print('\n'*2 + ' Digite X para cancelar a operação.')
         print('--------------------------------------------------------')
         dado = self.tela.validaInput(max=4)
@@ -125,7 +125,7 @@ class ControladorPessoa:
             print(f'\n CPF: {dadosGlobais.pessoas[escolha-1].cpf}')
             print(f' Nome: {dadosGlobais.pessoas[escolha-1].nome}')
             print(f' CEP: {dadosGlobais.pessoas[escolha-1].endereco.cep} | n° {dadosGlobais.pessoas[escolha-1].endereco.numero} | {dadosGlobais.pessoas[escolha-1].endereco.tipo} | {dadosGlobais.pessoas[escolha-1].endereco.tamanho} | {dadosGlobais.pessoas[escolha-1].endereco.animais}')
-            print(f' Data de Nascimento: {dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%d")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%m")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%y")}')
+            print(f' Data de Nascimento: {dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%d")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%m")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%Y")}')
             print('\n'*2 + ' Digite X para cancelar a operação.')
             print('--------------------------------------------------------')
             while True:
@@ -160,7 +160,7 @@ class ControladorPessoa:
         print(f'\n CPF: {dadosGlobais.pessoas[escolha-1].cpf}')
         print(f' Nome: {dadosGlobais.pessoas[escolha-1].nome}')
         print(f' CEP: {dadosGlobais.pessoas[escolha-1].endereco.cep} | n° {dadosGlobais.pessoas[escolha-1].endereco.numero} | {dadosGlobais.pessoas[escolha-1].endereco.tipo} | {dadosGlobais.pessoas[escolha-1].endereco.tamanho} | {dadosGlobais.pessoas[escolha-1].endereco.animais}')
-        print(f' Data de Nascimento: {dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%d")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%m")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%y")}')
+        print(f' Data de Nascimento: {dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%d")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%m")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%Y")}')
         print('\n'*2 + ' Digite X para cancelar as alterações.')
         print('--------------------------------------------------------')
         while True:
