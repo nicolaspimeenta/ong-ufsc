@@ -42,9 +42,9 @@ class ControladorRelatorio:
         print('--------------------------------------------')
         escolha = self.tela.validaInput(min=1, max=5, msg='Digite o número da restrição de data desejada no relatório')
         if escolha == 'X': return
-        if escolha == 1: dataMinima = datetime.date.today(); dataMaxima = datetime.date.today() - relativedelta(days=7)
-        if escolha == 2: dataMinima = datetime.date.today(); dataMaxima = datetime.date.today() - relativedelta(months=1)
-        if escolha == 3: dataMinima = datetime.date.today(); dataMaxima = datetime.date.today() - relativedelta(years=1)
+        if escolha == 1: dataMaxima = datetime.date.today(); dataMinima = datetime.date.today() - relativedelta(days=7)
+        if escolha == 2: dataMaxima = datetime.date.today(); dataMinima = datetime.date.today() - relativedelta(months=1)
+        if escolha == 3: dataMaxima = datetime.date.today(); dataMinima = datetime.date.today() - relativedelta(years=1)
         if escolha == 4:
             while True:
                 try:
@@ -63,7 +63,7 @@ class ControladorRelatorio:
                     dataMaxima = self.tela.validaData(True)
                     if dataMaxima == 'X': return
 
-                    if dataMinima < dataMaxima: raise ValueError
+                    if dataMinima > dataMaxima: raise ValueError
                     print('\n'*100 + '--------------------INTERVALO ESPECÍFICO--------------------')
                     print(f'\n Data Mínima: {dataMinima.strftime("%d")}/{dataMinima.strftime("%m")}/{dataMinima.strftime("%Y")}')
                     print(f' Data Máxima: {dataMaxima.strftime("%d")}/{dataMaxima.strftime("%m")}/{dataMaxima.strftime("%Y")}')
@@ -82,7 +82,7 @@ class ControladorRelatorio:
 
         if escolha == 5: dados = sorted(dados, key=lambda obj: obj.data)
         if escolha != 5:
-            dadosFiltrados = [dado for dado in dados if self.filtrarDatas(data=dado.data, dataMaior=dataMinima, dataMenor=dataMaxima)]
+            dadosFiltrados = [dado for dado in dados if self.filtrarDatas(data=dado.data, dataMaior=dataMaxima, dataMenor=dataMinima)]
             dados = sorted(dadosFiltrados, key=lambda obj: obj.data)
         
         print('\n'*100 + '--------------------RELATÓRIO--------------------')
