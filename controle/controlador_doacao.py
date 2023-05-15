@@ -2,8 +2,8 @@ import copy
 from limite.tela_doacao import TelaDoacao
 from controle.controlador_pessoa import ControladorPessoa
 from controle.controlador_animal import ControladorAnimal
-from entidade import dadosGlobais
 from entidade.doacao import Doacao
+from entidade import dadosGlobais
 
 class ControladorDoacao:
     def __init__(self):
@@ -24,7 +24,7 @@ class ControladorDoacao:
         print('\n'*100 + '--------------------DOAÇÃO DE ANIMAL--------------------')
         print('\n Doador | Animal | Motivo | Data')
         print('----------------------------------------------------------')
-        input('Clique ENTER para registrar o Doador')
+        input(' Clique ENTER para registrar o Doador')
 
         self.controladorPessoa.listarPessoa()
         escolha = self.tela.validaInput(len(dadosGlobais.pessoas), 'Digite o número da pessoa que irá doar o animal')
@@ -32,14 +32,14 @@ class ControladorDoacao:
         if escolha == 0: 
             tamanhoAnterior = len(dadosGlobais.pessoas)
             self.controladorPessoa.cadastrarPessoa()
-            if tamanhoAnterior < len(dadosGlobais.pessoas): escolha = len(dadosGlobais.pessoas)
-            else: return
+            if tamanhoAnterior == len(dadosGlobais.pessoas): return
+            escolha = len(dadosGlobais.pessoas)
         if dadosGlobais.pessoas[escolha-1].endereco.animais > 0: dadosGlobais.pessoas[escolha-1].endereco.animais -= 1
 
         print('\n'*100 + '--------------------DOAÇÃO DE ANIMAL--------------------')
         print(f'\n Doador: {dadosGlobais.pessoas[escolha-1].nome} | Animal | Motivo | Data')
         print('----------------------------------------------------------')
-        input('Clique ENTER para registrar o Animal')
+        input(' Clique ENTER para registrar o Animal')
 
         tamanhoAnterior = len(dadosGlobais.animais)
         self.controladorAnimal.cadastrarAnimal()
@@ -76,7 +76,7 @@ class ControladorDoacao:
         print(f'\n Doador: {dadosGlobais.pessoas[escolha-1].nome} | Animal: {dadosGlobais.animais[-1].nome} | Motivo: {motivo} | Data: {data.strftime("%d")}/{data.strftime("%m")}/{data.strftime("%Y")}')
         print('\n'*2 + ' Doação realizada com sucesso.')
         print('----------------------------------------------------------')
-        input('Clique ENTER para continuar')
+        input(' Clique ENTER para continuar')
 
         dadosGlobais.saveDoacao(Doacao(dadosGlobais.pessoas[escolha-1], dadosGlobais.animais[-1], data, motivo))
 
@@ -119,19 +119,23 @@ class ControladorDoacao:
                     if confirma == 'X': return
                     if confirma != 'S': raise ValueError
                 except Exception: print(' Valor inválido, por favor digite "S" ou "X"')
-                else: dadosGlobais.doacoes.pop(escolha-1); return
+                else:
+                    dadosGlobais.doacoes[escolha-1].pessoa.endereco.animais += 1
+                    dadosGlobais.doacoes.remove(dadosGlobais.doacoes[escolha-1])
+                    return
 
         if dado == 1:
+            dadosGlobais.doacoes[escolha-1].pessoa.endereco.animais += 1
             self.controladorPessoa.listarPessoa()
             novoDado = self.tela.validaInput(max=len(dadosGlobais.pessoas), msg='Digite o número da pessoa que doou o animal')
             if novoDado == 'X': return
             if novoDado == 0:
                 tamanhoAnterior = len(dadosGlobais.pessoas)
                 self.controladorPessoa.cadastrarPessoa()
-                if tamanhoAnterior < len(dadosGlobais.pessoas): novoDado = len(dadosGlobais.pessoas)
-                else: return
-            dadosGlobais.doacoes[novoDado-1].pessoa.endereco.animais += 1
-            dadosGlobais.doacoes[novoDado-1].pessoa = dadosGlobais.pessoas[novoDado-1]
+                if tamanhoAnterior == len(dadosGlobais.pessoas): return 
+                novoDado = len(dadosGlobais.pessoas)
+            dadosGlobais.doacoes[escolha-1].pessoa = dadosGlobais.pessoas[novoDado-1]
+            dadosGlobais.doacoes[escolha-1].pessoa.endereco.animais -= 1
 
         if dado == 2:
             tamanhoAnterior = len(dadosGlobais.animais)
@@ -140,6 +144,7 @@ class ControladorDoacao:
             novoDado = dadosGlobais.animais[-1]
 
             dadosGlobais.doacoes[escolha-1].animal = novoDado
+            dadosGlobais.doacoes[escolha-1].animal.dono = None
 
         if dado == 3:
             novoDado = str(input('\n Digite o motivo: ')).capitalize()

@@ -20,7 +20,7 @@ class ControladorPessoa:
             if escolha == 2: self.gerenciarPessoa()
 
     def listarPessoa(self, msg = ' ', adocao = False, cachorroGrande = False):
-        if adocao:
+        if adocao or cachorroGrande:
             print('\n'*100 + '--------------------LISTA DE PESSOAS CADASTRADAS--------------------')
             print(f' {msg}')
             print(' 0- Cadastrar uma nova pessoa')
@@ -139,7 +139,18 @@ class ControladorPessoa:
                     if confirma == 'X': return
                     if confirma != 'S': raise ValueError
                 except Exception: print(' Valor inválido, por favor digite "S" ou "X"')
-                else: dadosGlobais.pessoas.pop(escolha-1); return
+                else:
+                    for animal in dadosGlobais.animais:
+                        if animal.dono == dadosGlobais.pessoas[escolha-1]: animal.dono = None
+                        
+                    for doacao in dadosGlobais.doacoes:
+                        if doacao.pessoa == dadosGlobais.pessoas[escolha-1]: doacao.pessoa.endereco.animais += 1; dadosGlobais.doacoes.remove(doacao)
+
+                    for adocao in dadosGlobais.adocoes:
+                        if adocao.pessoa == dadosGlobais.pessoas[escolha-1]: adocao.animal.dono = None; adocao.pessoa.endereco.animais -= 1; dadosGlobais.adocoes.remove(adocao)
+
+                    dadosGlobais.pessoas.remove(dadosGlobais.pessoas[escolha-1])
+                    return
 
         if dado == 1: 
             novoDado = self.validarCPF()
@@ -214,6 +225,9 @@ class ControladorPessoa:
             except Exception: print(' Valor inválido, por favor digite um número')
             else: break
 
+        for endereco in dadosGlobais.enderecos:
+            if cep == endereco.cep and num == endereco.numero: return endereco
+
         print('\n'*100 + '--------------------ENDEREÇO--------------------')
         print(f'\n {cep} | {num} | Tipo | Tamanho | Quantidade de Animais')
         print('\n 1- Casa')
@@ -261,9 +275,7 @@ class ControladorPessoa:
                 if confirma == 'X': return confirma
                 if confirma != 'S': raise ValueError
             except Exception: print(' Valor inválido, por favor digite "S" ou "X"')
-            else: 
-                for obj in dadosGlobais.enderecos:
-                    if cep == obj.cep and num == obj.numero: return obj
+            else:
                 dadosGlobais.saveEndereco(Endereco(cep, num, tipo, tamanho, animais))
                 return dadosGlobais.enderecos[-1]
             

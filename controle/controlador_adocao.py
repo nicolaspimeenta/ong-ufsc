@@ -2,8 +2,8 @@ import copy
 from limite.tela_adocao import TelaAdocao
 from controle.controlador_pessoa import ControladorPessoa
 from controle.controlador_animal import ControladorAnimal
-from entidade import dadosGlobais
 from entidade.adocao import Adocao
+from entidade import dadosGlobais
 
 class ControladorAdocao:
     def __init__(self):
@@ -24,7 +24,7 @@ class ControladorAdocao:
         print('\n'*100 + '--------------------ADOÇÃO DE ANIMAL--------------------')
         print('\n Animal | Adotante | Assinatura | Data')
         print('----------------------------------------------------------')
-        input('Clique ENTER para registrar o Animal')
+        input(' Clique ENTER para registrar o Animal')
 
         listaAdotaveis = self.controladorAnimal.listarAnimal('Todos animais da lista foram vacinados contra: Raiva, Leptospirose e Hepatite Infecciosa. \n', True)
         escolha = self.tela.validaInput(len(listaAdotaveis), 'Digite o número do animal que será adotado')
@@ -36,13 +36,12 @@ class ControladorAdocao:
         print('\n'*100 + '--------------------ADOÇÃO DE ANIMAL--------------------')
         print(f'\n Animal: {animal.nome} ({animal.id}) | Adotante | Data')
         print('----------------------------------------------------------')
-        input('Clique ENTER para registrar o Adotante')
+        input(' Clique ENTER para registrar o Adotante')
 
         listaAdotantes = self.controladorPessoa.listarPessoa('Todas as pessoas da lista nunca doaram um animal para essa ONG. \n', True)
 
-        if animal.tipo == 'Cachorro':
-            if animal.tamanho == 'Grande': 
-                listaAdotantes = self.controladorPessoa.listarPessoa('Todas as pessoas da lista nunca doaram um animal para essa ONG. \n', True, True)
+        if animal.tipo == 'Cachorro' and animal.tamanho == 'Grande':
+            listaAdotantes = self.controladorPessoa.listarPessoa('Todas as pessoas da lista nunca doaram um animal para essa ONG. \n', True, True)
         
         escolha = self.tela.validaInput(len(listaAdotantes), 'Digite o número do adotante')
         if escolha == 'X': return
@@ -85,7 +84,7 @@ class ControladorAdocao:
         print(f'\n Animal: {animal.nome} ({animal.id}) | Adotante: {pessoa.nome} ({pessoa.cpf}) | Data: {data.strftime("%d")}/{data.strftime("%m")}/{data.strftime("%Y")}')
         print('\n'*2 + ' Adoção realizada com sucesso.')
         print('----------------------------------------------------------')
-        input('Clique ENTER para continuar')
+        input(' Clique ENTER para continuar')
 
         animal.dono = pessoa
         pessoa.endereco.animais += 1
@@ -128,20 +127,25 @@ class ControladorAdocao:
                     if confirma == 'X': return
                     if confirma != 'S': raise ValueError
                 except Exception: print(' Valor inválido, por favor digite "S" ou "X"')
-                else: dadosGlobais.adocoes.pop(escolha-1); return
+                else: 
+                    dadosGlobais.adocoes[escolha-1].animal.dono = None
+                    dadosGlobais.adocoes[escolha-1].pessoa.endereco.animais -= 1
+                    dadosGlobais.adocoes.remove(dadosGlobais.adocoes[escolha-1])
+                    return
 
         if dado == 1:
+            dadosGlobais.adocoes[escolha-1].pessoa.endereco.animais -= 1
             listaAdotantes = self.controladorPessoa.listarPessoa('Todas as pessoas da lista nunca doaram um animal para essa ONG. \n', True)
 
-            if dadosGlobais.adocoes[escolha-1].animal.tipo == 'Cachorro':
-                if dadosGlobais.adocoes[escolha-1].animal.tamanho == 'Grande':
-                    listaAdotantes = self.controladorPessoa.listarPessoa('Todas as pessoas da lista nunca doaram um animal para essa ONG. \n', True, True)
+            if dadosGlobais.adocoes[escolha-1].animal.tipo == 'Cachorro' and dadosGlobais.adocoes[escolha-1].animal.tamanho == 'Grande':
+                listaAdotantes = self.controladorPessoa.listarPessoa('Todas as pessoas da lista nunca doaram um animal para essa ONG. \n', True, True)
             
             novoDado = self.tela.validaInput(len(listaAdotantes), 'Digite o número do adotante')
             if novoDado == 'X': return
             if novoDado == 0: self.controladorPessoa.cadastrarPessoa(); return
 
-            dadosGlobais.adocoes[escolha-1].pessoa = listaAdotantes[escolha-1]
+            dadosGlobais.adocoes[escolha-1].pessoa = listaAdotantes[novoDado-1]
+            dadosGlobais.adocoes[escolha-1].pessoa.endereco.animais += 1
 
         if dado == 2: 
             if dadosGlobais.adocoes[escolha-1].pessoa.endereco.tipo == 'Apartamento' and dadosGlobais.adocoes[escolha-1].pessoa.endereco.tamanho == 'Pequeno':
@@ -150,7 +154,7 @@ class ControladorAdocao:
             if novoDado == 'X': return
             if novoDado == 0: self.controladorAnimal.cadastrarAnimal(); return
 
-            dadosGlobais.adocoes[escolha-1].animal = listaAdotaveis[escolha-1]
+            dadosGlobais.adocoes[escolha-1].animal = listaAdotaveis[novoDado-1]
 
         if dado == 3:
             novoDado = self.tela.validaData(True)

@@ -11,7 +11,10 @@ class ControladorRelatorio:
         opcoes = []
         while True:
             self.tela.abreTela()
-            print(f' {len(opcoes)} opção(ões) escolhida(s)')
+            print(f'\n Escolhido(s):')
+            if 1 in opcoes: print(' Vacinas')
+            if 2 in opcoes: print(' Doações')
+            if 3 in opcoes: print(' Adoções')
             escolha = self.tela.validaInput(min=1, max=3)
             if escolha == 'X': return
             if escolha in opcoes: print(' Você já escolheu esta opção, por favor escolha outra.'); continue
