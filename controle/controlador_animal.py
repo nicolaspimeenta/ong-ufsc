@@ -341,6 +341,7 @@ class ControladorAnimal:
         return
             
     def validaAdocao(self, animal, cachorroGrande):
+        if animal.dono: return False
         if cachorroGrande:
             if animal.tipo == 'Cachorro':
                 if animal.tamanho == 'Grande': return False
