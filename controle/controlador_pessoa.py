@@ -226,7 +226,7 @@ class ControladorPessoa:
             else: break
 
         for endereco in dadosGlobais.enderecos:
-            if cep == endereco.cep and num == endereco.numero: return endereco
+            if cep == endereco.cep and num == endereco.numero and endereco.tipo == 'Casa': return endereco
 
         print('\n'*100 + '--------------------ENDEREÇO--------------------')
         print(f'\n {cep} | {num} | Tipo | Tamanho | Quantidade de Animais')
