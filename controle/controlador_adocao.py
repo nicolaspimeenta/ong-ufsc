@@ -13,9 +13,8 @@ class ControladorAdocao:
     
     def iniciar(self):
         while True:
-            self.tela.abreTela()
-            escolha = self.tela.validaInput(2, 'Digite o número da opção desejada', 1)
-            if escolha == 'X': return
+            escolha = int(self.tela.abreTela())
+            if escolha == 0: return
             if escolha == 1: self.cadastrarAdocao()
             if escolha == 2: self.gerenciarDoacao()
 

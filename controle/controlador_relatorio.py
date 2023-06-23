@@ -10,7 +10,7 @@ class ControladorRelatorio:
     def iniciar(self):
         opcoes = []
         while True:
-            self.tela.abreTela()
+            escolha = int(self.tela.abreTela())
             print(f'\n Escolhido(s):')
             if 1 in opcoes: print(' Vacinas')
             if 2 in opcoes: print(' Doações')

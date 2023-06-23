@@ -1,6 +1,5 @@
 import copy
 import datetime
-from validate_docbr import CPF
 from dateutil.relativedelta import relativedelta
 from limite.tela_pessoa import TelaPessoa
 from entidade.pessoa import Pessoa
@@ -13,279 +12,40 @@ class ControladorPessoa:
 
     def iniciar(self):
         while True:
-            self.tela.abreTela()
-            escolha = self.tela.validaInput(min=1, max=2, msg='Digite o número da opção desejada')
-            if escolha == 'X': return
+            escolha = int(self.tela.abreTela())
+            if escolha == 0: return
             if escolha == 1: self.cadastrarPessoa()
             if escolha == 2: self.gerenciarPessoa()
 
-    def listarPessoa(self, msg = ' ', adocao = False, cachorroGrande = False):
-        if adocao or cachorroGrande:
-            print('\n'*100 + '--------------------LISTA DE PESSOAS CADASTRADAS--------------------')
-            print(f' {msg}')
-            print(' 0- Cadastrar uma nova pessoa')
-            if len(dadosGlobais.pessoas) == 0: print(' Não há nenhuma pessoa cadastrada no sistema.')
-            else:
-                listaAdotantes = []
-                for pessoa in dadosGlobais.pessoas:
-                    if self.validaAdocao(pessoa, cachorroGrande): listaAdotantes.append(pessoa)
-                if len(listaAdotantes) == 0: print(' Nenhuma pessoa cadastrada pode adotar esse animal.')
-                for i in range(len(listaAdotantes)):
-                    margem = ' '*(30 - len(listaAdotantes[i].nome))
-                    print(f' {i+1}- {listaAdotantes[i].nome} {margem} | {listaAdotantes[i].cpf}')
-            print('\n'*2 + ' Digite X para cancelar a operação.')
-            print('---------------------------------------------------------------------')
-            return listaAdotantes
-
-        if not adocao:
-            print('\n'*100 + '--------------------LISTA DE PESSOAS CADASTRADAS--------------------')
-            print(f' {msg}')
-            print(' 0- Cadastrar uma nova pessoa')
-            if len(dadosGlobais.pessoas) == 0: print(' Não há nenhuma pessoa cadastrada no sistema.')
-            else:
-                for i in range(len(dadosGlobais.pessoas)): 
-                    margem = ' '*(30 - len(dadosGlobais.pessoas[i].nome)) 
-                    print(f' {i+1}- {dadosGlobais.pessoas[i].nome} {margem} | {dadosGlobais.pessoas[i].cpf}')
-            print('\n'*2 + ' Digite X para cancelar a operação.')
-            print('---------------------------------------------------------------------')
-
     def cadastrarPessoa(self):
-        print('\n'*100 + '--------------------CADASTRO DE PESSOA--------------------')
-        print('\n 000.000.000-00 | Nome | Endereço | Data de Nascimento')
-        print('\n'*2 + ' Digite X para cancelar a operação.')
-        print('----------------------------------------------------------')
-        while True:
-            try:
-                cpf = self.validarCPF()
-                if cpf.capitalize() == 'X': return
-                for pessoa in dadosGlobais.pessoas:
-                    if cpf == pessoa.cpf: raise ValueError
-            except Exception: print(f' Esse CPF já foi cadastrado, por favor digite outro')
-            else: break
+        dados = self.tela.cadastroPessoa()
+        if dados[0] == 'Retornar': return
 
-        print('\n'*100 + '--------------------CADASTRO DE PESSOA--------------------')
-        print(f'\n {cpf} | Nome | Endereço | Data de Nascimento') 
-        print('\n'*2 + ' Digite X para cancelar a operação.')
-        print('----------------------------------------------------------')
-        nome = str(input('\n Digite o Nome: ')).title()
-        if nome == 'X': return
-
-        print('\n'*100 + '--------------------CADASTRO DE PESSOA--------------------')
-        print(f'\n {cpf} | {nome} | Endereço | Data de Nascimento')
-        print('----------------------------------------------------------')
-        pausa = input('\n Clique ENTER para cadastrar o endereço: ')
-        if pausa.capitalize() == 'X': return
-        endereco = self.validarEndereco()
-        if endereco == 'X': return
-
-        print('\n'*100 + '--------------------CADASTRO DE PESSOA--------------------')
-        print(f'\n {cpf} | {nome} | CEP: {endereco.cep}, n° {endereco.numero} | Data de Nascimento')
-        print('\n'*2 + ' Digite X para cancelar a operação.')
-        print('----------------------------------------------------------')
-        dataNascimento = self.validarIdade()
-        if dataNascimento == 'X': return
-
-        print('\n'*100 + '--------------------CADASTRO DE PESSOA--------------------')
-        print(f'\n CPF: {cpf} | Nome: {nome} | CEP: {endereco.cep}, n° {endereco.numero} | Data de Nascimento: {dataNascimento.strftime("%d")}/{dataNascimento.strftime("%m")}/{dataNascimento.strftime("%Y")}')
-        print('\n'*2 + ' Digite X para cancelar a operação.')
-        print('----------------------------------------------------------')
-        while True:
-            try:
-                confirma = str(input('\n Digite S para confirmar o cadastro: ')).capitalize()
-                if confirma == 'X': return
-                if confirma != 'S': raise ValueError
-            except Exception: print(' Valor inválido, por favor digite "S" ou "X"')
-            else: break
-
-        dadosGlobais.savePessoa(Pessoa(cpf, nome, dataNascimento, endereco))
-
-        print('\n'*100 + '--------------------CADASTRO DE PESSOA--------------------')
-        print(f'\n CPF: {cpf} | Nome: {nome} | CEP: {endereco.cep}, n° {endereco.numero} | Data de Nascimento: {dataNascimento.strftime("%d")}/{dataNascimento.strftime("%m")}/{dataNascimento.strftime("%Y")}')
-        print('\n'*2 + ' Cadastro realizado com sucesso.')
-        print('----------------------------------------------------------')
-        input('\n Clique ENTER para continuar: ')
+        dadosGlobais.saveEndereco(Endereco(dados[1]['cep'][:5] + '-' + dados[1]['cep'][5:9], dados[1]['numero'], dados[1]['tipo'], dados[1]['tamanho'], int(dados[1]['animais'])))
+        dadosGlobais.savePessoa(Pessoa(dados[1]['cpf'][:3] + '.' + dados[1]['cpf'][3:6] + '.' + dados[1]['cpf'][6:9] + '-' + dados[1]['cpf'][9:11],
+                                       dados[1]['nome'], datetime.date(int(dados[1]['ano']), int(dados[1]['mes']), int(dados[1]['dia'])), 
+                                       dadosGlobais.enderecos[-1]))
 
     def gerenciarPessoa(self):
-        self.listarPessoa()
+        dados = self.tela.gerenciarPessoa(dadosGlobais.pessoas)
+        if dados[0] == 'Retornar': return
 
-        escolha = self.tela.validaInput(max=len(dadosGlobais.pessoas), msg='Digite o número do cadastro que deseja alterar ou excluir')
+        if dados[0] == 'Excluir':
+            for key, value in dados[1].items():
+                if value == True: dadosGlobais.pessoas.pop(key)
 
-        if escolha == 'X': return
-        if escolha == 0: self.cadastrarPessoa(); return
+        if dados[0] == 'Alterar':
+            for key, value in dados[1].items():
+                if value == True: 
+                    dados = self.tela.alterarPessoa(dadosGlobais.pessoas[key])
+                    if dados[0] == 'Retornar': return
 
-        backupPessoa = copy.deepcopy(dadosGlobais.pessoas[escolha-1])
-        print('\n'*100 + '--------------------ALTERAR CADASTRO--------------------')
-        print('\n 0- Excluir Cadastro')
-        print(f' 1- CPF: {dadosGlobais.pessoas[escolha-1].cpf}')
-        print(f' 2- Nome: {dadosGlobais.pessoas[escolha-1].nome}')
-        print(f' 3- CEP: {dadosGlobais.pessoas[escolha-1].endereco.cep} | n° {dadosGlobais.pessoas[escolha-1].endereco.numero} | {dadosGlobais.pessoas[escolha-1].endereco.tipo} | {dadosGlobais.pessoas[escolha-1].endereco.tamanho} | {dadosGlobais.pessoas[escolha-1].endereco.animais} animal(is)')
-        print(f' 4- Data de Nascimento: {dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%d")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%m")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%Y")}')
-        print('\n'*2 + ' Digite X para cancelar a operação.')
-        print('--------------------------------------------------------')
-        dado = self.tela.validaInput(max=4)
-        if dado == 'X': return
-
-        if dado == 0:
-            print('\n'*100 + '--------------------EXCLUIR CADASTRO--------------------')
-            print(f'\n CPF: {dadosGlobais.pessoas[escolha-1].cpf}')
-            print(f' Nome: {dadosGlobais.pessoas[escolha-1].nome}')
-            print(f' CEP: {dadosGlobais.pessoas[escolha-1].endereco.cep} | n° {dadosGlobais.pessoas[escolha-1].endereco.numero} | {dadosGlobais.pessoas[escolha-1].endereco.tipo} | {dadosGlobais.pessoas[escolha-1].endereco.tamanho} | {dadosGlobais.pessoas[escolha-1].endereco.animais} animal(is)')
-            print(f' Data de Nascimento: {dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%d")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%m")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%Y")}')
-            print('\n'*2 + ' Digite X para cancelar a operação.')
-            print('--------------------------------------------------------')
-            while True:
-                try:
-                    confirma = str(input('\n Digite S para confirmar a exclusäo: ')).capitalize()
-                    if confirma == 'X': return
-                    if confirma != 'S': raise ValueError
-                except Exception: print(' Valor inválido, por favor digite "S" ou "X"')
-                else:
-                    for animal in dadosGlobais.animais:
-                        if animal.dono == dadosGlobais.pessoas[escolha-1]: animal.dono = None
-                        
-                    for doacao in dadosGlobais.doacoes:
-                        if doacao.pessoa == dadosGlobais.pessoas[escolha-1]: doacao.pessoa.endereco.animais += 1; dadosGlobais.doacoes.remove(doacao)
-
-                    for adocao in dadosGlobais.adocoes:
-                        if adocao.pessoa == dadosGlobais.pessoas[escolha-1]: adocao.animal.dono = None; adocao.pessoa.endereco.animais -= 1; dadosGlobais.adocoes.remove(adocao)
-
-                    dadosGlobais.pessoas.remove(dadosGlobais.pessoas[escolha-1])
-                    return
-
-        if dado == 1: 
-            novoDado = self.validarCPF()
-            if novoDado.capitalize() == 'X': return
-            dadosGlobais.pessoas[escolha-1].cpf = novoDado
-
-        if dado == 2: 
-            novoDado = str(input('\n Digite o Nome: ')).title()
-            if novoDado == 'X': return
-            dadosGlobais.pessoas[escolha-1].nome = novoDado
-
-        if dado == 3:
-            novoDado = self.validarEndereco()
-            if novoDado == 'X': return
-            dadosGlobais.pessoas[escolha-1].endereco = novoDado
-
-        if dado == 4:
-            novoDado = self.validarIdade()
-            if novoDado == 'X': return
-            dadosGlobais.pessoas[escolha-1].dataNascimento = novoDado
-
-        print('\n'*100 + '--------------------ALTERAR CADASTRO--------------------')
-        print(f'\n CPF: {dadosGlobais.pessoas[escolha-1].cpf}')
-        print(f' Nome: {dadosGlobais.pessoas[escolha-1].nome}')
-        print(f' CEP: {dadosGlobais.pessoas[escolha-1].endereco.cep} | n° {dadosGlobais.pessoas[escolha-1].endereco.numero} | {dadosGlobais.pessoas[escolha-1].endereco.tipo} | {dadosGlobais.pessoas[escolha-1].endereco.tamanho} | {dadosGlobais.pessoas[escolha-1].endereco.animais} animal(is)')
-        print(f' Data de Nascimento: {dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%d")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%m")}/{dadosGlobais.pessoas[escolha-1].dataNascimento.strftime("%Y")}')
-        print('\n'*2 + ' Digite X para cancelar as alterações.')
-        print('--------------------------------------------------------')
-        while True:
-            try:
-                confirma = str(input('\n Digite S para confirmar: ')).capitalize()
-                if confirma == 'X': dadosGlobais.pessoas[escolha-1] = backupPessoa; return
-                if confirma != 'S': raise ValueError
-            except Exception: print(' Valor inválido, por favor digite "S" ou "X"')
-            else: break
-
-    def validarCPF(self):
-        vCpf = CPF()
-        while True:
-            try:
-                cpf = str(input('\n Digite o CPF (apenas números): ')).capitalize()
-                if cpf == 'X': return cpf
-                if cpf == 'R': cpf = vCpf.generate()
-                if not cpf.isdigit(): raise ValueError
-                if not vCpf.validate(cpf): raise ValueError
-            except Exception: print(f' CPF inválido, por favor digite outro')
-            else: return cpf[:3] + '.' + cpf[3:6] + '.' + cpf[6:9] + '-' + cpf[9:11]
-
-    def validarEndereco(self):
-        print('\n'*100 + '--------------------ENDEREÇO--------------------')
-        print('\n 00000-000 | Número | Tipo | Tamanho | Quantidade de Animais')
-        print('\n'*2 + ' Digite X para cancelar a operação.')
-        print('------------------------------------------------')
-        while True:
-            try:
-                cep = str(input('\n Digite o CEP: ')).capitalize()
-                if cep == 'X': return cep
-                if not len(cep) == 8 or not cep.isdigit(): raise ValueError
-            except Exception: print(f' O CEP "{cep}" é inválido, por favor digite outro')
-            else: cep = cep[:5] + '-' + cep[5:9]; break
-
-        print('\n'*100 + '--------------------ENDEREÇO--------------------')
-        print(f'\n {cep} | Número | Tipo | Tamanho | Quantidade de Animais')
-        print('\n'*2 + ' Digite X para cancelar a operação.')
-        print('------------------------------------------------')
-        while True:
-            try:
-                num = str(input('\n Digite o número da residência: ')).capitalize()
-                if num == 'X': return num
-                num = int(num)
-                if num < 1: raise ValueError
-            except Exception: print(' Valor inválido, por favor digite um número')
-            else: break
-
-        for endereco in dadosGlobais.enderecos:
-            if cep == endereco.cep and num == endereco.numero and endereco.tipo == 'Casa': return endereco
-
-        print('\n'*100 + '--------------------ENDEREÇO--------------------')
-        print(f'\n {cep} | {num} | Tipo | Tamanho | Quantidade de Animais')
-        print('\n 1- Casa')
-        print(' 2- Apartamento')
-        print('\n'*2 + ' Digite X para cancelar a operação.')
-        print('------------------------------------------------')
-        tipo = self.tela.validaInput(min=1, max=2, msg='Digite o número do tipo da residência')
-        if tipo == 'X': return tipo
-        if tipo == 1: tipo = 'Casa'
-        if tipo == 2: tipo = 'Apartamento'
-
-        print('\n'*100 + '--------------------ENDEREÇO--------------------')
-        print(f'\n {cep} | {num} | {tipo} | Tamanho | Quantidade de Animais')
-        print('\n 1- Pequeno')
-        print(' 2- Médio')
-        print(' 3- Grande')
-        print('\n'*2 + ' Digite X para cancelar a operação.')
-        print('------------------------------------------------')
-        tamanho = self.tela.validaInput(min=1, max=3, msg='Digite o número do tamanho da residência')
-        if tamanho == 'X': return tamanho
-        if tamanho == 1: tamanho = 'Pequeno'
-        if tamanho == 2: tamanho = 'Médio'
-        if tamanho == 3: tamanho = 'Grande'
-
-        print('\n'*100 + '--------------------ENDEREÇO--------------------')
-        print(f'\n {cep} | {num} | {tipo} | {tamanho} | Quantidade de Animais')
-        print('\n'*2 + ' Digite X para cancelar a operação.')
-        print('------------------------------------------------')
-        while True:
-            try:
-                animais = str(input('\n Digite o número de animais na residência: ')).capitalize()
-                if animais == 'X': return animais
-                animais = int(animais)
-                if animais < 0: raise ValueError
-            except Exception: print(' Valor inválido, por favor digite novamente')
-            else: break
-
-        print('\n'*100 + '--------------------ENDEREÇO--------------------')
-        print(f'\n {cep} | {num} | {tipo} | {tamanho} | {animais} animal(is)')
-        print('\n'*2 + ' Digite X para cancelar a operação.')
-        print('------------------------------------------------')
-        while True:
-            try:
-                confirma = str(input('\n Digite S para confirmar: ')).capitalize()
-                if confirma == 'X': return confirma
-                if confirma != 'S': raise ValueError
-            except Exception: print(' Valor inválido, por favor digite "S" ou "X"')
-            else:
-                dadosGlobais.saveEndereco(Endereco(cep, num, tipo, tamanho, animais))
-                return dadosGlobais.enderecos[-1]
-            
-    def validarIdade(self):
-        while True:
-            dataNascimento = self.tela.validaData(False)
-            if dataNascimento == 'X': break
-            if dataNascimento > (datetime.date.today() - relativedelta(years=18)): print(' Não é permitido cadastrar menores de 18 anos, por favor tente novamente')
-            else: break
-        return dataNascimento
+                    dadosGlobais.pessoas[key].nome = dados[1]['nome']
+                    dadosGlobais.pessoas[key].dataNascimento = datetime.date(int(dados[1]['ano']), int(dados[1]['mes']), int(dados[1]['dia']))
+                    dadosGlobais.pessoas[key].endereco.cep = dados[1]['cep'][:5] + '-' + dados[1]['cep'][5:9]
+                    dadosGlobais.pessoas[key].endereco.tipo = dados[1]['tipo']
+                    dadosGlobais.pessoas[key].endereco.tamanho = dados[1]['tamanho']
+                    dadosGlobais.pessoas[key].endereco.animais = int(dados[1]['animais'])
 
     def validaAdocao(self, pessoa, cachorroGrande):
         for doacao in dadosGlobais.doacoes:

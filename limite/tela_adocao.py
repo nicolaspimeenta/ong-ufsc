@@ -1,9 +1,30 @@
-from limite.tela_padrao import TelaPadrao
+import PySimpleGUI as sg
 
-class TelaAdocao(TelaPadrao):
+class TelaAdocao():
+    def __init__(self):
+        self.__window = None
+        self.init_layout()
+
+    def init_layout(self):
+        sg.ChangeLookAndFeel('TanBlue')
+        layout = [
+        [sg.Text('Escolha a opção desejada', font=("Arial", 15))],
+        [sg.Radio('Cadastrar uma nova Adoção', "RD1", key='1', font=('Arial', 10))],
+        [sg.Radio('Gerenciar os cadastros de Adoções', "RD1", key='2', font=('Arial', 10))],
+        [sg.Button('Confirmar', font=('Arial', 10)), sg.Cancel('Retornar', font=('Arial', 10))]
+        ]
+        self.__window = sg.Window('ONG - Adoção e Doação de Animais', layout, size=(400, 140), font=('Arial', 10))
+
     def abreTela(self):
-        print('\n'*100 + '--------------------ADOÇÃO--------------------')
-        print('\n 1- Cadastrar uma nova Adoção')
-        print(' 2- Gerenciar os cadastros de Adoções')
-        print('\n'*2 + ' Digite X para retornar ao menu inicial.')
-        print('--------------------------------------------')
+        self.init_layout()
+        valores = self.__window.Read()
+        escolha = 0
+        for key, value in valores[1].items():
+            if value == True:
+                escolha = key
+        self.close()
+        if valores[0] == 'Retornar': return 0
+        return escolha
+
+    def close(self):
+        self.__window.Close()

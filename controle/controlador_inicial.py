@@ -17,9 +17,8 @@ class ControladorInicial:
 
     def iniciar(self):
         while True:
-            self.tela.abreTela()
-            escolha = self.tela.validaInput(min=1, max=5)
-            if escolha == 'X': break
+            escolha = int(self.tela.abreTela())
+            if escolha == 0: break
             if escolha == 1: self.controladorAnimal.iniciar()
             if escolha == 2: self.controladorPessoa.iniciar()
             if escolha == 3: self.controladorDoacao.iniciar()
