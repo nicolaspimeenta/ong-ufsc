@@ -57,7 +57,7 @@ class TelaDoacao(TelaPadrao):
 
                 if doador: break
 
-                sg.Popup('ERRO', 'Selecione alguma pessoa ou cadastre uma nova')
+                sg.popup('ERRO', 'Selecione alguma pessoa ou cadastre uma nova')
                 self.window.close()
                 continue
 
@@ -92,7 +92,7 @@ class TelaDoacao(TelaPadrao):
 
                 if animal: break
 
-                sg.Popup('ERRO', 'Selecione algum animal ou cadastre um novo')
+                sg.popup('ERRO', 'Selecione algum animal ou cadastre um novo')
                 self.window.close()
                 continue
 
@@ -118,7 +118,7 @@ class TelaDoacao(TelaPadrao):
                 return valores
 
             if not super().validaData(valores[1]['dia'], valores[1]['mes'], valores[1]['ano']):
-                sg.Popup('ERRO', 'Digite uma Data válida')
+                sg.popup('ERRO', 'Digite uma Data válida')
                 self.window.close()
                 continue
 
@@ -126,7 +126,7 @@ class TelaDoacao(TelaPadrao):
                 erro = False
                 for key, value in valores[1].items():
                     if value == '':
-                        sg.Popup('ERRO', f'O campo {key} é obrigatório')
+                        sg.popup('ERRO', f'O campo {key} é obrigatório')
                         self.window.close()
                         erro = True
                         break
@@ -149,7 +149,7 @@ class TelaDoacao(TelaPadrao):
                 layout.append([sg.Text('Não há nenhuma doação cadastrada', font=('Arial', 10, 'bold'))])
             else:
                 for doacao in doacoes:
-                    layout.append([sg.Radio(f'{doacao.data.strftime("%d")}/{doacao.data.strftime("%m")}/{doacao.data.strftime("%Y")} {doacao.pessoa.nome} doou o {doacao.animal.tipo} {doacao.animal.nome} (ID: {doacao.id})', 'RADIO1')])
+                    layout.append([sg.Radio(f'{doacao.data.strftime("%d")}/{doacao.data.strftime("%m")}/{doacao.data.strftime("%Y")} {doacao.pessoa.nome} doou o {doacao.animal.tipo} {doacao.animal.nome} (ID: {doacao.animal.id})', 'RADIO1')])
 
             layout.append([sg.Button('Alterar', font=('Arial', 10)), sg.Button('Excluir', font=('Arial', 10), button_color='#B22222'), sg.Cancel('Retornar', font=('Arial', 10))])
             self.window = sg.Window('ONG UFSC', layout, font=('Arial', 10))
@@ -161,7 +161,7 @@ class TelaDoacao(TelaPadrao):
                     if value == True:
                         self.window.close()
                         return valores
-                sg.Popup('ERRO', 'Selecione uma doação para altera-la ou exclui-la')
+                sg.popup('ERRO', 'Selecione uma doação para altera-la ou exclui-la')
                 continue
 
             self.window.close()
@@ -186,7 +186,7 @@ class TelaDoacao(TelaPadrao):
                 return valores
 
             if not super().validaData(valores[1]['dia'], valores[1]['mes'], valores[1]['ano']):
-                sg.Popup('ERRO', 'Digite uma Data válida')
+                sg.popup('ERRO', 'Digite uma Data válida')
                 self.window.close()
                 continue
 
@@ -194,7 +194,7 @@ class TelaDoacao(TelaPadrao):
                 erro = False
                 for key, value in valores[1].items():
                     if value == '':
-                        sg.Popup('ERRO', f'O campo {key} é obrigatório')
+                        sg.popup('ERRO', f'O campo {key} é obrigatório')
                         self.window.close()
                         erro = True
                         break

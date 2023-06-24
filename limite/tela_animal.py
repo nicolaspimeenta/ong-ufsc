@@ -16,7 +16,7 @@ class TelaAnimal(TelaPadrao):
         [sg.Radio('Registrar uma nova Vacina', "RD1", key='3', font=('Arial', 10))],
         [sg.Button('Confirmar', font=('Arial', 10)), sg.Cancel('Retornar', font=('Arial', 10))]
         ]
-        self.window = sg.Window('ONG UFSC', layout, size=(400, 170), font=('Arial', 10))
+        self.window = sg.Window('ONG UFSC', layout, font=('Arial', 10))
 
     def abreTela(self):
         self.init_layout()
@@ -50,7 +50,7 @@ class TelaAnimal(TelaPadrao):
                 erro = False
                 for key, value in valores[1].items():
                     if value == '':
-                        sg.Popup('ERRO', f'O campo {key} é obrigatório')
+                        sg.popup('ERRO', f'O campo {key} é obrigatório')
                         self.window.close()
                         erro = True
                         break
@@ -81,7 +81,7 @@ class TelaAnimal(TelaPadrao):
                     if value == True:
                         self.window.close()
                         return valores
-                sg.Popup('ERRO', 'Selecione um animal para altera-lo ou exclui-lo')
+                sg.popup('ERRO', 'Selecione um animal para altera-lo ou exclui-lo')
                 continue
 
             self.window.close()
@@ -112,7 +112,7 @@ class TelaAnimal(TelaPadrao):
                 return valores
 
             if animal.tipo != valores[1]['tipo'].split(' ')[0]:
-                sg.Popup('ERRO', 'Não é possível alterar a espécie do animal (apenas o tamanho)')
+                sg.popup('ERRO', 'Não é possível alterar a espécie do animal (apenas o tamanho)')
                 self.window.close()
                 continue
 
@@ -120,7 +120,7 @@ class TelaAnimal(TelaPadrao):
                 erro = False
                 for key, value in valores[1].items():
                     if value == '':
-                        sg.Popup('ERRO', f'O campo {key} é obrigatório')
+                        sg.popup('ERRO', f'O campo {key} é obrigatório')
                         self.window.close()
                         erro = True
                         break
@@ -157,7 +157,7 @@ class TelaAnimal(TelaPadrao):
                         if value == True:
                             animaisEscolhidos.append(key)
                     if len(animaisEscolhidos) == 0:
-                        sg.Popup('ERRO', 'Selecione pelo menos um animal para aplicar a vacina')
+                        sg.popup('ERRO', 'Selecione pelo menos um animal para aplicar a vacina')
                         continue
                 break
         else: animaisEscolhidos.append(id)
@@ -179,7 +179,7 @@ class TelaAnimal(TelaPadrao):
                 return valores
 
             if not super().validaData(valores[1]['dia'], valores[1]['mes'], valores[1]['ano']):
-                sg.Popup('ERRO', 'Digite uma Data válida')
+                sg.popup('ERRO', 'Digite uma Data válida')
                 self.window.close()
                 continue
 
@@ -187,7 +187,7 @@ class TelaAnimal(TelaPadrao):
                 erro = False
                 for key, value in valores[1].items():
                     if value == '':
-                        sg.Popup('ERRO', f'O campo {key} é obrigatório')
+                        sg.popup('ERRO', f'O campo {key} é obrigatório')
                         self.window.close()
                         erro = True
                         break
@@ -196,6 +196,67 @@ class TelaAnimal(TelaPadrao):
             self.window.close()
             return valores, animaisEscolhidos
 
+    def gerenciarVacinas(self, vacinas, animal):
+        while True:
+            layout = [
+                [sg.Text(f'Lista de Vacinas do {animal.tipo} {animal.nome} ID: {animal.id} :', font=('Arial', 12, 'bold'))],
+                [sg.Text('Selecione uma para exclui-la ou altera-la', font=('Arial', 10))],
+            ]
+            if len(vacinas) == 0:
+                layout.append([sg.Text('Não há nenhuma vacina cadastrada', font=('Arial', 10, 'bold'))])
+            else:
+                for vacina in vacinas:
+                    layout.append([sg.Radio(f'{vacina.data.strftime("%d")}/{vacina.data.strftime("%m")}/{vacina.data.strftime("%Y")} - {vacina.tipo}', 'RADIO1')])
+
+            layout.append([sg.Button('Alterar', font=('Arial', 10)), sg.Button('Excluir', font=('Arial', 10), button_color='#B22222'), sg.Cancel('Retornar', font=('Arial', 10))])
+            self.window = sg.Window('ONG UFSC', layout, font=('Arial', 10))
+
+            valores = self.window.read()
+
+            if valores[0] == 'Excluir' or valores[0] == 'Alterar':
+                for key, value in valores[1].items():
+                    if value == True:
+                        self.window.close()
+                        return valores
+                sg.popup('ERRO', 'Selecione uma vacina para altera-lo ou exclui-lo')
+                continue
+
+            self.window.close()
+            return valores
+        
+    def alterarVacina(self, vacina):
+        while True:
+            layout = [
+            [sg.Text(f'Alterando Vacina', font=('Arial', 12, 'bold'))],
+            [sg.Text('Tipo da Vacina', size=(20, 1)), sg.InputText(f'{vacina.tipo}', key='tipo')],
+            [sg.Text('Data da Aplicação', size=(20, 1)), sg.InputText(f'{vacina.data.strftime("%d")}', key='dia', size=(5, 1)), sg.Text('/'), sg.InputText(f'{vacina.data.strftime("%m")}', key='mes', size=(5, 1)), sg.Text('/'), sg.InputText(f'{vacina.data.strftime("%Y")}', key='ano', size=(5, 1))],
+            [sg.Button('Confirmar', font=('Arial', 10)), sg.Cancel('Retornar', font=('Arial', 10))]
+            ]
+            self.window = sg.Window('ONG UFSC', layout, font=('Arial', 10))
+
+            valores = self.window.read()
+
+            if valores[0] == 'Retornar':
+                self.window.close()
+                return valores
+
+            if not super().validaData(valores[1]['dia'], valores[1]['mes'], valores[1]['ano']):
+                sg.popup('ERRO', 'Digite uma Data válida')
+                self.window.close()
+                continue
+
+            if valores[0] == 'Confirmar':
+                erro = False
+                for key, value in valores[1].items():
+                    if value == '':
+                        sg.popup('ERRO', f'O campo {key} é obrigatório')
+                        self.window.close()
+                        erro = True
+                        break
+                if erro: continue
+            
+            self.window.close()
+            return valores
 
             
         

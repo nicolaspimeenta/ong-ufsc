@@ -54,27 +54,27 @@ class TelaPessoa(TelaPadrao):
                 return valores
 
             if not self.validarCPF(valores[1]['cpf']):
-                sg.Popup('ERRO', 'Digite um CPF válido')
+                sg.popup('ERRO', 'Digite um CPF válido')
                 self.window.close()
                 continue
 
             if not (valores[1]['cep'].isdigit() and len(valores[1]['cep']) == 8):
-                sg.Popup('ERRO', 'Digite um CEP válido')
+                sg.popup('ERRO', 'Digite um CEP válido')
                 self.window.close()
                 continue
 
             if not self.validarIdade(valores[1]['dia'], valores[1]['mes'], valores[1]['ano']):
-                sg.Popup('ERRO', 'Digite uma Data válida')
+                sg.popup('ERRO', 'Digite uma Data válida')
                 self.window.close()
                 continue
 
             if not valores[1]['numero'].isdigit():
-                sg.Popup('ERRO', 'Digite um número válido')
+                sg.popup('ERRO', 'Digite um número válido')
                 self.window.close()
                 continue
 
             if not valores[1]['animais'].isdigit():
-                sg.Popup('ERRO', 'Digite um número válido')
+                sg.popup('ERRO', 'Digite um número válido')
                 self.window.close()
                 continue
 
@@ -82,7 +82,7 @@ class TelaPessoa(TelaPadrao):
                 erro = False
                 for key, value in valores[1].items():
                     if value == '':
-                        sg.Popup('ERRO', f'O campo {key} é obrigatório')
+                        sg.popup('ERRO', f'O campo {key} é obrigatório')
                         self.window.close()
                         erro = True
                         break
@@ -113,7 +113,7 @@ class TelaPessoa(TelaPadrao):
                     if value == True:
                         self.window.close()
                         return valores
-                sg.Popup('ERRO', 'Selecione uma pessoa para altera-la ou exclui-la')
+                sg.popup('ERRO', 'Selecione uma pessoa para altera-la ou exclui-la')
                 continue
 
             self.window.close()
@@ -143,22 +143,22 @@ class TelaPessoa(TelaPadrao):
                 return valores
 
             if not (valores[1]['cep'].isdigit() and len(valores[1]['cep']) == 8):
-                sg.Popup('ERRO', 'Digite um CEP válido')
+                sg.popup('ERRO', 'Digite um CEP válido')
                 self.window.close()
                 continue
 
             if not self.validarIdade(valores[1]['dia'], valores[1]['mes'], valores[1]['ano']):
-                sg.Popup('ERRO', 'Digite uma Data válida')
+                sg.popup('ERRO', 'Digite uma Data válida')
                 self.window.close()
                 continue
 
             if not valores[1]['numero'].isdigit():
-                sg.Popup('ERRO', 'Digite um número válido')
+                sg.popup('ERRO', 'Digite um número válido')
                 self.window.close()
                 continue
 
             if not valores[1]['animais'].isdigit():
-                sg.Popup('ERRO', 'Digite um número válido')
+                sg.popup('ERRO', 'Digite um número válido')
                 self.window.close()
                 continue
 
@@ -166,7 +166,7 @@ class TelaPessoa(TelaPadrao):
                 erro = False
                 for key, value in valores[1].items():
                     if value == '':
-                        sg.Popup('ERRO', f'O campo {key} é obrigatório')
+                        sg.popup('ERRO', f'O campo {key} é obrigatório')
                         self.window.close()
                         erro = True
                         break
@@ -175,11 +175,16 @@ class TelaPessoa(TelaPadrao):
             self.window.close()
             return valores
         
+    def pessoaRepetida(self):
+        sg.popup('ERRO', 'CPF já cadastrado')
+        self.window.close()
+        return
+
         
     def validarCPF(self, cpf: str):
         validator = CPF()
         if not cpf.isdigit(): return False
-        if cpf.capitalize() == 'R': return validator.generate(mask=True)
+        if cpf == '12345678900': return True
         if not validator.validate(cpf): return False
         return True
     

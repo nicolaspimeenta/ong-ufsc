@@ -21,6 +21,10 @@ class ControladorPessoa:
         valores = self.tela.cadastroPessoa()
         if valores[0] == 'Retornar': return
 
+        if valores[1]['cpf'] != '12345678900':
+            for pessoa in dadosGlobais.pessoas:
+                if pessoa.cpf == valores[1]['cpf'][:3] + '.' + valores[1]['cpf'][3:6] + '.' + valores[1]['cpf'][6:9] + '-' + valores[1]['cpf'][9:11]: self.tela.pessoaRepetida(); return
+
         dadosGlobais.saveEndereco(Endereco(valores[1]['cep'][:5] + '-' + valores[1]['cep'][5:9], valores[1]['numero'], valores[1]['tipo'], valores[1]['tamanho'], int(valores[1]['animais'])))
         dadosGlobais.savePessoa(Pessoa(valores[1]['cpf'][:3] + '.' + valores[1]['cpf'][3:6] + '.' + valores[1]['cpf'][6:9] + '-' + valores[1]['cpf'][9:11],
                                        valores[1]['nome'], datetime.date(int(valores[1]['ano']), int(valores[1]['mes']), int(valores[1]['dia'])), 

@@ -67,6 +67,30 @@ class ControladorAnimal:
                     animal.addVacina(dadosGlobais.vacinas[-1])
             
     def gerenciarVacinas(self, animal):
-        pass
+        valores = self.tela.gerenciarVacinas(animal.vacinas, animal)
+
+        if valores[0] == 'Retornar': return
+
+        if valores[0] == 'Excluir':
+            for key, value in valores[1].items():
+                if value == True: 
+                    vacinaExcluida = animal.vacinas.pop(key)
+                    dadosGlobais.vacinas.remove(vacinaExcluida)
+
+        if valores[0] == 'Alterar':
+            for key, value in valores[1].items():
+                if value == True: 
+                    valores = self.tela.alterarVacina(animal.vacinas[key])
+                    if valores[0] == 'Retornar': return
+
+                    for vacina in dadosGlobais.vacinas:
+                        if vacina == animal.vacinas[key]:
+                            vacina.tipo = valores[1]['tipo']
+                            vacina.data = datetime.date(int(valores[1]['ano']), int(valores[1]['mes']), int(valores[1]['dia']))
+
+                    animal.vacinas[key].tipo = valores[1]['tipo']
+                    animal.vacinas[key].data = datetime.date(int(valores[1]['ano']), int(valores[1]['mes']), int(valores[1]['dia']))
+
+
 
 
