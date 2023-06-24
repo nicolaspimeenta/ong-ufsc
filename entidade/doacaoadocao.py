@@ -1,4 +1,6 @@
-class AbastractDoacaoAdocao:
+from abc import ABC
+
+class AbastractDoacaoAdocao(ABC):
     def __init__(self, pessoa: object, animal: object, data):
         self.__pessoa = pessoa
         self.__animal = animal

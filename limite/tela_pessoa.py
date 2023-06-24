@@ -17,16 +17,16 @@ class TelaPessoa(TelaPadrao):
         [sg.Radio('Gerenciar os cadastros de Pessoas', "RD1", key='2', font=('Arial', 10))],
         [sg.Button('Confirmar', font=('Arial', 10)), sg.Cancel('Retornar', font=('Arial', 10))]
         ]
-        self.window = sg.Window('ONG UFSC', layout, size=(400, 140), font=('Arial', 10))
+        self.window = sg.Window('ONG UFSC', layout, font=('Arial', 10))
 
     def abreTela(self):
         self.init_layout()
-        valores = self.window.Read()
+        valores = self.window.read()
         escolha = 0
         for key, value in valores[1].items():
             if value == True:
                 escolha = key
-        self.window.Close()
+        self.window.close()
         if valores[0] == 'Retornar': return 0
         return escolha
 
@@ -47,36 +47,35 @@ class TelaPessoa(TelaPadrao):
             ]
             self.window = sg.Window('ONG UFSC', layout, font=('Arial', 10))
 
-            valores = self.window.Read()
-            print(valores)
+            valores = self.window.read()
 
             if valores[0] == 'Retornar':
-                self.window.Close()
+                self.window.close()
                 return valores
 
             if not self.validarCPF(valores[1]['cpf']):
                 sg.Popup('ERRO', 'Digite um CPF válido')
-                self.window.Close()
+                self.window.close()
                 continue
 
             if not (valores[1]['cep'].isdigit() and len(valores[1]['cep']) == 8):
                 sg.Popup('ERRO', 'Digite um CEP válido')
-                self.window.Close()
+                self.window.close()
                 continue
 
             if not self.validarIdade(valores[1]['dia'], valores[1]['mes'], valores[1]['ano']):
                 sg.Popup('ERRO', 'Digite uma Data válida')
-                self.window.Close()
+                self.window.close()
                 continue
 
             if not valores[1]['numero'].isdigit():
                 sg.Popup('ERRO', 'Digite um número válido')
-                self.window.Close()
+                self.window.close()
                 continue
 
             if not valores[1]['animais'].isdigit():
                 sg.Popup('ERRO', 'Digite um número válido')
-                self.window.Close()
+                self.window.close()
                 continue
 
             if valores[0] == 'Confirmar':
@@ -84,12 +83,12 @@ class TelaPessoa(TelaPadrao):
                 for key, value in valores[1].items():
                     if value == '':
                         sg.Popup('ERRO', f'O campo {key} é obrigatório')
-                        self.window.Close()
+                        self.window.close()
                         erro = True
                         break
                 if erro: continue
             
-            self.window.Close()
+            self.window.close()
             return valores
         
     def gerenciarPessoa(self, pessoas):
@@ -107,18 +106,17 @@ class TelaPessoa(TelaPadrao):
             layout.append([sg.Button('Alterar', font=('Arial', 10)), sg.Button('Excluir', font=('Arial', 10), button_color='#B22222'), sg.Cancel('Retornar', font=('Arial', 10))])
             self.window = sg.Window('ONG UFSC', layout, font=('Arial', 10))
 
-            valores = self.window.Read()
-            print(valores)
+            valores = self.window.read()
 
             if valores[0] == 'Excluir' or valores[0] == 'Alterar':
                 for key, value in valores[1].items():
                     if value == True:
-                        self.window.Close()
+                        self.window.close()
                         return valores
                 sg.Popup('ERRO', 'Selecione uma pessoa para altera-la ou exclui-la')
                 continue
 
-            self.window.Close()
+            self.window.close()
             return valores
         
     def alterarPessoa(self, pessoa):
@@ -131,38 +129,37 @@ class TelaPessoa(TelaPadrao):
             [sg.Text('Endereço:', font=('Arial', 12, 'bold'))],
             [sg.Text('CEP (Apenas dígitos)', size=(20, 1)), sg.InputText(f'{pessoa.endereco.cep[:5] + pessoa.endereco.cep[6:9]}', key='cep', size=(9, 1))],
             [sg.Text('Número', size=(20, 1)), sg.InputText(f'{pessoa.endereco.numero}', key='numero', size=(6, 1))],
-            [sg.Text('Tipo de Residência', size=(20, 1)), sg.InputCombo(('Casa', 'Apartamento'), key='tipo')],
-            [sg.Text('Tamanho da Residência', size=(20, 1)), sg.InputCombo(('Grande', 'Médio', 'Pequeno'), key='tamanho')],
+            [sg.Text('Tipo de Residência', size=(20, 1)), sg.InputCombo(('Casa', 'Apartamento'), key='tipo', default_value=pessoa.endereco.tipo)],
+            [sg.Text('Tamanho da Residência', size=(20, 1)), sg.InputCombo(('Grande', 'Médio', 'Pequeno'), key='tamanho', default_value=pessoa.endereco.tamanho)],
             [sg.Text('Quantidade de Animais', size=(20, 1)), sg.InputText(f'{pessoa.endereco.animais}', key='animais', size=(4, 1))],
             [sg.Button('Confirmar', font=('Arial', 10)), sg.Cancel('Retornar', font=('Arial', 10))]
             ]
             self.window = sg.Window('ONG UFSC', layout, font=('Arial', 10))
 
-            valores = self.window.Read()
-            print(valores)
+            valores = self.window.read()
 
             if valores[0] == 'Retornar':
-                self.window.Close()
+                self.window.close()
                 return valores
 
             if not (valores[1]['cep'].isdigit() and len(valores[1]['cep']) == 8):
                 sg.Popup('ERRO', 'Digite um CEP válido')
-                self.window.Close()
+                self.window.close()
                 continue
 
             if not self.validarIdade(valores[1]['dia'], valores[1]['mes'], valores[1]['ano']):
                 sg.Popup('ERRO', 'Digite uma Data válida')
-                self.window.Close()
+                self.window.close()
                 continue
 
             if not valores[1]['numero'].isdigit():
                 sg.Popup('ERRO', 'Digite um número válido')
-                self.window.Close()
+                self.window.close()
                 continue
 
             if not valores[1]['animais'].isdigit():
                 sg.Popup('ERRO', 'Digite um número válido')
-                self.window.Close()
+                self.window.close()
                 continue
 
             if valores[0] == 'Confirmar':
@@ -170,12 +167,12 @@ class TelaPessoa(TelaPadrao):
                 for key, value in valores[1].items():
                     if value == '':
                         sg.Popup('ERRO', f'O campo {key} é obrigatório')
-                        self.window.Close()
+                        self.window.close()
                         erro = True
                         break
                 if erro: continue
             
-            self.window.Close()
+            self.window.close()
             return valores
         
         

@@ -1,4 +1,3 @@
-import copy
 import datetime
 from limite.tela_animal import TelaAnimal
 from controle.controlador_pessoa import ControladorPessoa
@@ -21,58 +20,53 @@ class ControladorAnimal:
             if escolha == 3: self.aplicarVacina()
 
     def cadastrarAnimal(self):
-        dados = self.tela.cadastroAnimal()
-        if dados[0] == 'Retornar': return
+        valores = self.tela.cadastroAnimal()
+        if valores[0] == 'Retornar': return
 
-        if dados[1]['tipo'] == 'Cachorro Grande': dadosGlobais.saveAnimal(Cachorro(len(dadosGlobais.animais)+1, 'Cachorro', dados[1]['nome'], dados[1]['raca'], None, 'Grande'))
-        if dados[1]['tipo'] == 'Cachorro Médio': dadosGlobais.saveAnimal(Cachorro(len(dadosGlobais.animais)+1, 'Cachorro', dados[1]['nome'], dados[1]['raca'], None, 'Médio'))
-        if dados[1]['tipo'] == 'Cachorro Pequeno': dadosGlobais.saveAnimal(Cachorro(len(dadosGlobais.animais)+1, 'Cachorro', dados[1]['nome'], dados[1]['raca'], None, 'Pequeno'))
-        if dados[1]['tipo'] == 'Gato': dadosGlobais.saveAnimal(Gato(len(dadosGlobais.animais)+1, 'Gato', dados[1]['nome'], dados[1]['raca'], None))
+        if valores[1]['tipo'] == 'Cachorro Grande': dadosGlobais.saveAnimal(Cachorro(len(dadosGlobais.animais)+1, 'Cachorro', valores[1]['nome'], valores[1]['raca'], None, 'Grande'))
+        if valores[1]['tipo'] == 'Cachorro Médio': dadosGlobais.saveAnimal(Cachorro(len(dadosGlobais.animais)+1, 'Cachorro', valores[1]['nome'], valores[1]['raca'], None, 'Médio'))
+        if valores[1]['tipo'] == 'Cachorro Pequeno': dadosGlobais.saveAnimal(Cachorro(len(dadosGlobais.animais)+1, 'Cachorro', valores[1]['nome'], valores[1]['raca'], None, 'Pequeno'))
+        if valores[1]['tipo'] == 'Gato': dadosGlobais.saveAnimal(Gato(len(dadosGlobais.animais)+1, 'Gato', valores[1]['nome'], valores[1]['raca'], None))
 
 
     def gerenciarAnimal(self):
-        dados = self.tela.gerenciarAnimal(dadosGlobais.animais)
-        if dados[0] == 'Retornar': return
+        valores = self.tela.gerenciarAnimal(dadosGlobais.animais)
+        if valores[0] == 'Retornar': return
 
-        if dados[0] == 'Excluir':
-            for key, value in dados[1].items():
-                if value == True: dadosGlobais.animais.pop(key)
-
-        if dados[0] == 'Alterar':
-            for key, value in dados[1].items():
+        if valores[0] == 'Excluir':
+            for key, value in valores[1].items():
                 if value == True: 
-                    dados = self.tela.alterarAnimal(dadosGlobais.animais[key])
-                    if dados[0] == 'Retornar': return
-                    if dados[0] == 'Aplicar Vacina': self.aplicarVacina(dadosGlobais.animais[key].id)
+                    animalExcluido = dadosGlobais.animais.pop(key)
+                    for animal in dadosGlobais.animais:
+                        if animal.id > animalExcluido.id: animal.id -= 1
 
-                    dadosGlobais.animais[key].nome = dados[1]['nome']
-                    dadosGlobais.animais[key].raca = dados[1]['raca']
-                    if dados[1]['tipo'] == 'Cachorro Grande': dadosGlobais.animais[key].tamanho = 'Grande'
-                    if dados[1]['tipo'] == 'Cachorro Médio': dadosGlobais.animais[key].tamanho = 'Médio'
-                    if dados[1]['tipo'] == 'Cachorro Pequeno': dadosGlobais.animais[key].tamanho = 'Pequeno'
+        if valores[0] == 'Alterar':
+            for key, value in valores[1].items():
+                if value == True: 
+                    valores = self.tela.alterarAnimal(dadosGlobais.animais[key])
+                    if valores[0] == 'Retornar': return
+                    if valores[0] == 'Aplicar Vacina': self.aplicarVacina(dadosGlobais.animais[key].id); return
+                    if valores[0] == 'Gerenciar Vacinas': self.gerenciarVacinas(dadosGlobais.animais[key]); return
+
+                    dadosGlobais.animais[key].nome = valores[1]['nome']
+                    dadosGlobais.animais[key].raca = valores[1]['raca']
+                    if valores[1]['tipo'] == 'Cachorro Grande': dadosGlobais.animais[key].tamanho = 'Grande'
+                    if valores[1]['tipo'] == 'Cachorro Médio': dadosGlobais.animais[key].tamanho = 'Médio'
+                    if valores[1]['tipo'] == 'Cachorro Pequeno': dadosGlobais.animais[key].tamanho = 'Pequeno'
 
     def aplicarVacina(self, animal = 0):
         if animal == 0:
-            dados, animaisEscolhidos = self.tela.aplicarVacina(dadosGlobais.animais, escolherAnimal=True)
+            valores, animaisEscolhidos = self.tela.aplicarVacina(dadosGlobais.animais, escolherAnimal=True)
         else:
-            dados, animaisEscolhidos = self.tela.aplicarVacina(dadosGlobais.animais, escolherAnimal=False, id=animal)
+            valores, animaisEscolhidos = self.tela.aplicarVacina(dadosGlobais.animais, escolherAnimal=False, id=animal)
             
         for id in animaisEscolhidos:
             for animal in dadosGlobais.animais:
                 if animal.id == id:
-                    dadosGlobais.saveVacina(dados[1]['tipo'], datetime.date(int(dados[1]['ano']), int(dados[1]['mes']), int(dados[1]['dia'])), animal)
+                    dadosGlobais.saveVacina(Vacina(valores[1]['tipo'], datetime.date(int(valores[1]['ano']), int(valores[1]['mes']), int(valores[1]['dia'])), animal))
                     animal.addVacina(dadosGlobais.vacinas[-1])
             
-    def validaAdocao(self, animal, cachorroGrande):
-        if animal.dono: return False
-        if cachorroGrande:
-            if animal.tipo == 'Cachorro':
-                if animal.tamanho == 'Grande': return False
-        vacinasEncontradas = []
-        for vacinaNecessaria in ['Hepatite Infecciosa', 'Leptospirose', 'Raiva']:
-            for vacina in animal.vacinas:
-                if vacina.tipo == vacinaNecessaria and not (vacinaNecessaria in vacinasEncontradas): vacinasEncontradas.append(vacina.tipo)
-        if vacinasEncontradas == ['Hepatite Infecciosa', 'Leptospirose', 'Raiva'] and animal.dono == None: return True
-        return False
+    def gerenciarVacinas(self, animal):
+        pass
 
 

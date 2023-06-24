@@ -18,34 +18,34 @@ class ControladorPessoa:
             if escolha == 2: self.gerenciarPessoa()
 
     def cadastrarPessoa(self):
-        dados = self.tela.cadastroPessoa()
-        if dados[0] == 'Retornar': return
+        valores = self.tela.cadastroPessoa()
+        if valores[0] == 'Retornar': return
 
-        dadosGlobais.saveEndereco(Endereco(dados[1]['cep'][:5] + '-' + dados[1]['cep'][5:9], dados[1]['numero'], dados[1]['tipo'], dados[1]['tamanho'], int(dados[1]['animais'])))
-        dadosGlobais.savePessoa(Pessoa(dados[1]['cpf'][:3] + '.' + dados[1]['cpf'][3:6] + '.' + dados[1]['cpf'][6:9] + '-' + dados[1]['cpf'][9:11],
-                                       dados[1]['nome'], datetime.date(int(dados[1]['ano']), int(dados[1]['mes']), int(dados[1]['dia'])), 
+        dadosGlobais.saveEndereco(Endereco(valores[1]['cep'][:5] + '-' + valores[1]['cep'][5:9], valores[1]['numero'], valores[1]['tipo'], valores[1]['tamanho'], int(valores[1]['animais'])))
+        dadosGlobais.savePessoa(Pessoa(valores[1]['cpf'][:3] + '.' + valores[1]['cpf'][3:6] + '.' + valores[1]['cpf'][6:9] + '-' + valores[1]['cpf'][9:11],
+                                       valores[1]['nome'], datetime.date(int(valores[1]['ano']), int(valores[1]['mes']), int(valores[1]['dia'])), 
                                        dadosGlobais.enderecos[-1]))
 
     def gerenciarPessoa(self):
-        dados = self.tela.gerenciarPessoa(dadosGlobais.pessoas)
-        if dados[0] == 'Retornar': return
+        valores = self.tela.gerenciarPessoa(dadosGlobais.pessoas)
+        if valores[0] == 'Retornar': return
 
-        if dados[0] == 'Excluir':
-            for key, value in dados[1].items():
+        if valores[0] == 'Excluir':
+            for key, value in valores[1].items():
                 if value == True: dadosGlobais.pessoas.pop(key)
 
-        if dados[0] == 'Alterar':
-            for key, value in dados[1].items():
+        if valores[0] == 'Alterar':
+            for key, value in valores[1].items():
                 if value == True: 
-                    dados = self.tela.alterarPessoa(dadosGlobais.pessoas[key])
-                    if dados[0] == 'Retornar': return
+                    valores = self.tela.alterarPessoa(dadosGlobais.pessoas[key])
+                    if valores[0] == 'Retornar': return
 
-                    dadosGlobais.pessoas[key].nome = dados[1]['nome']
-                    dadosGlobais.pessoas[key].dataNascimento = datetime.date(int(dados[1]['ano']), int(dados[1]['mes']), int(dados[1]['dia']))
-                    dadosGlobais.pessoas[key].endereco.cep = dados[1]['cep'][:5] + '-' + dados[1]['cep'][5:9]
-                    dadosGlobais.pessoas[key].endereco.tipo = dados[1]['tipo']
-                    dadosGlobais.pessoas[key].endereco.tamanho = dados[1]['tamanho']
-                    dadosGlobais.pessoas[key].endereco.animais = int(dados[1]['animais'])
+                    dadosGlobais.pessoas[key].nome = valores[1]['nome']
+                    dadosGlobais.pessoas[key].dataNascimento = datetime.date(int(valores[1]['ano']), int(valores[1]['mes']), int(valores[1]['dia']))
+                    dadosGlobais.pessoas[key].endereco.cep = valores[1]['cep'][:5] + '-' + valores[1]['cep'][5:9]
+                    dadosGlobais.pessoas[key].endereco.tipo = valores[1]['tipo']
+                    dadosGlobais.pessoas[key].endereco.tamanho = valores[1]['tamanho']
+                    dadosGlobais.pessoas[key].endereco.animais = int(valores[1]['animais'])
 
     def validaAdocao(self, pessoa, cachorroGrande):
         for doacao in dadosGlobais.doacoes:

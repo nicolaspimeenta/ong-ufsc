@@ -1,4 +1,6 @@
-class Animal:
+from abc import ABC
+
+class Animal(ABC):
     def __init__(self, id: int, tipo: str, nome: str, raca: str, dono: object):
         self.__id = id
         self.__tipo = tipo

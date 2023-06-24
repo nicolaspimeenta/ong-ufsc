@@ -1,6 +1,7 @@
 import datetime
+from abc import ABC
 
-class TelaPadrao:
+class TelaPadrao(ABC):
     def validaData(self, dia: str, mes: str, ano: str):
         if not (dia.isdigit() and mes.isdigit() and ano.isdigit()): return False
         try: 

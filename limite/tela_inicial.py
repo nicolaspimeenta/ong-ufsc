@@ -20,11 +20,11 @@ class TelaInicial():
 
     def abreTela(self):
         self.init_layout()
-        valores = self.window.Read()
+        valores = self.window.read()
         escolha = 0
         if valores[0] == 'Confirmar':
             for key, value in valores[1].items():
                 if value == True:
                     escolha = key
-        self.window.Close()
+        self.window.close()
         return escolha

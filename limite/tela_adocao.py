@@ -2,7 +2,7 @@ import PySimpleGUI as sg
 
 class TelaAdocao():
     def __init__(self):
-        self.__window = None
+        self.window = None
         self.init_layout()
 
     def init_layout(self):
@@ -13,18 +13,15 @@ class TelaAdocao():
         [sg.Radio('Gerenciar os cadastros de Adoções', "RD1", key='2', font=('Arial', 10))],
         [sg.Button('Confirmar', font=('Arial', 10)), sg.Cancel('Retornar', font=('Arial', 10))]
         ]
-        self.__window = sg.Window('ONG - Adoção e Doação de Animais', layout, size=(400, 140), font=('Arial', 10))
+        self.window = sg.Window('ONG UFSC', layout, font=('Arial', 10))
 
     def abreTela(self):
         self.init_layout()
-        valores = self.__window.Read()
+        valores = self.window.read()
         escolha = 0
         for key, value in valores[1].items():
             if value == True:
                 escolha = key
-        self.close()
+        self.window.close()
         if valores[0] == 'Retornar': return 0
         return escolha
-
-    def close(self):
-        self.__window.Close()
