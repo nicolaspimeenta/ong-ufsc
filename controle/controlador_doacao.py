@@ -48,5 +48,5 @@ class ControladorDoacao:
                     valores = self.tela.alterarDoacao(dadosGlobais.doacoes[key])
                     if valores[0] == 'Retornar': return
 
-                    dadosGlobais.doacao[key].data = datetime.date(int(valores[1]['ano']), int(valores[1]['mes']), int(valores[1]['dia']))
-                    dadosGlobais.animais[key].motivo = valores[1]['motivo']
+                    dadosGlobais.doacoes[key].data = datetime.date(int(valores[1]['ano']), int(valores[1]['mes']), int(valores[1]['dia']))
+                    dadosGlobais.doacoes[key].motivo = valores[1]['motivo']

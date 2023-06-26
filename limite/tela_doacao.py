@@ -142,7 +142,7 @@ class TelaDoacao(TelaPadrao):
     def gerenciarDoacao(self, doacoes):
         while True:
             layout = [
-                [sg.Text('Lista de DoaçÕes Cadastrados:', font=('Arial', 12, 'bold'))],
+                [sg.Text('Lista de Doações Cadastradas:', font=('Arial', 12, 'bold'))],
                 [sg.Text('Selecione uma para exclui-la ou altera-la', font=('Arial', 10))],
             ]
             if len(doacoes) == 0:
@@ -171,10 +171,10 @@ class TelaDoacao(TelaPadrao):
         while True:
             layout = [
             [sg.Text('Dados Gerais:', font=('Arial', 12, 'bold'))],
-            [sg.Text('Doador', size=(20, 1)), sg.InputText(f'{doacao.pessoa.nome} | {doacao.pessoa.cpf}', key='pessoa', size=(14, 1), disabled=True)],
-            [sg.Text('Animal Doado', size=(20, 1)), sg.InputText(f'{doacao.animal.tipo} {doacao.animal.nome} | ID: {doacao.animail.id}', key='animal', disabled=True)],
+            [sg.Text('Doador', size=(20, 1)), sg.InputText(f'{doacao.pessoa.nome} | {doacao.pessoa.cpf}', key='pessoa', disabled=True)],
+            [sg.Text('Animal Doado', size=(20, 1)), sg.InputText(f'{doacao.animal.tipo} {doacao.animal.nome} | ID: {doacao.animal.id}', key='animal', disabled=True)],
             [sg.Text('Data da Doação', size=(20, 1)), sg.InputText(f'{doacao.data.strftime("%d")}', key='dia', size=(5, 1)), sg.Text('/'), sg.InputText(f'{doacao.data.strftime("%m")}', key='mes', size=(5, 1)), sg.Text('/'), sg.InputText(f'{doacao.data.strftime("%Y")}', key='ano', size=(5, 1))],
-            [sg.Text('Motivo da Doação', size=(20, 1)), sg.InputText(f'{doacao.motivo}', key='motivo', size=(14, 1))],
+            [sg.Text('Motivo da Doação', size=(20, 1)), sg.InputText(f'{doacao.motivo}', key='motivo')],
             [sg.Button('Confirmar', font=('Arial', 10)), sg.Cancel('Retornar', font=('Arial', 10))]
             ]
             self.window = sg.Window('ONG UFSC', layout, font=('Arial', 10))

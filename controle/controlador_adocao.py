@@ -1,4 +1,4 @@
-import copy
+import datetime
 from limite.tela_adocao import TelaAdocao
 from controle.controlador_pessoa import ControladorPessoa
 from controle.controlador_animal import ControladorAnimal
@@ -16,161 +16,49 @@ class ControladorAdocao:
             escolha = int(self.tela.abreTela())
             if escolha == 0: return
             if escolha == 1: self.cadastrarAdocao()
-            if escolha == 2: self.gerenciarDoacao()
+            if escolha == 2: self.gerenciarAdocao()
 
 
     def cadastrarAdocao(self):
-        print('\n'*100 + '--------------------ADOÇÃO DE ANIMAL--------------------')
-        print('\n Animal | Adotante | Assinatura | Data')
-        print('----------------------------------------------------------')
-        input(' Clique ENTER para registrar o Animal')
+        doadores = []
+        vacinados = []
+        for doacao in dadosGlobais.doacoes: doadores.append(doacao.pessoa.cpf)
 
-        listaAdotaveis = self.controladorAnimal.listarAnimal('Todos animais da lista foram vacinados contra: Raiva, Leptospirose e Hepatite Infecciosa. \n', True)
-        escolha = self.tela.validaInput(len(listaAdotaveis), 'Digite o número do animal que será adotado')
-        if escolha == 'X': return
-        if escolha == 0: self.controladorAnimal.cadastrarAnimal(); return
+        for animal in dadosGlobais.animais:
+            vacinas = []
+            for vacina in animal.vacinas:
+                if vacina.tipo.lower() == 'raiva' or vacina.tipo.lower() == 'leptospirose' or vacina.tipo.lower() == 'hepatite infecciosa':
+                    vacinas.append(vacina.tipo.lower())
 
-        animal = listaAdotaveis[escolha-1]
+            if 'raiva' in vacinas and 'leptospirose' in vacinas and 'hepatite infecciosa' in vacinas: vacinados.append(animal.id)
 
-        print('\n'*100 + '--------------------ADOÇÃO DE ANIMAL--------------------')
-        print(f'\n Animal: {animal.nome} ({animal.id}) | Adotante | Data')
-        print('----------------------------------------------------------')
-        input(' Clique ENTER para registrar o Adotante')
+        valores = self.tela.cadastrarAdocao(dadosGlobais.pessoas, dadosGlobais.animais, doadores, vacinados)
+        if valores[0] == 'Retornar': return
 
-        listaAdotantes = self.controladorPessoa.listarPessoa('Todas as pessoas da lista nunca doaram um animal para essa ONG. \n', True)
+        if valores[0] == 'Cadastrar o Animal': self.controladorAnimal.cadastrarAnimal(); return
 
-        if animal.tipo == 'Cachorro' and animal.tamanho == 'Grande':
-            listaAdotantes = self.controladorPessoa.listarPessoa('Todas as pessoas da lista nunca doaram um animal para essa ONG. \n', True, True)
-        
-        escolha = self.tela.validaInput(len(listaAdotantes), 'Digite o número do adotante')
-        if escolha == 'X': return
-        if escolha == 0: self.controladorPessoa.cadastrarPessoa(); return
+        if valores[0] == 'Cadastrar a Pessoa': self.controladorPessoa.cadastrarPessoa(); return
 
-        pessoa = listaAdotantes[escolha-1]
+        valores[0].endereco.animais += 1
+        valores[1].dono = valores[0]
+        dadosGlobais.saveAdocao(Adocao(valores[0], valores[1], datetime.date(int(valores[3][2]), int(valores[3][1]), int(valores[3][0])), valores[2]))
 
-        print('\n'*100 + '--------------------ADOÇÃO DE ANIMAL--------------------')
-        print(f'\n Animal: {animal.nome} ({animal.id}) | Adotante: {pessoa.nome} ({pessoa.cpf}) | Data')
-        print('\n'*2 + ' Digite X para cancelar a operação.')
-        print('----------------------------------------------------------')
-        while True:
-            try:
-                confirma = str(input('\n Digite S se o adotante assinou o termo de responsabilidade: ')).capitalize()
-                if confirma == 'X': return
-                if confirma != 'S': raise ValueError
-            except Exception: print(' Valor inválido, por favor digite "S" ou "X"')
-            else: break
+    def gerenciarAdocao(self):
+        valores = self.tela.gerenciarAdocao(dadosGlobais.adocoes)
+        if valores[0] == 'Retornar': return
 
-        print('\n'*100 + '--------------------ADOÇÃO DE ANIMAL--------------------')
-        print(f'\n Animal: {animal.nome} ({animal.id}) | Adotante: {pessoa.nome} ({pessoa.cpf}) | Data')
-        print('\n'*2 + ' Digite X para cancelar a operação.')
-        print('----------------------------------------------------------')
-        data = self.tela.validaData(True)
-        if data == 'X': return
+        if valores[0] == 'Excluir':
+            for key, value in valores[1].items():
+                if value == True: 
+                    doacaoExcluida = dadosGlobais.adocoes.pop(key)
+                    doacaoExcluida.animal.dono = None
+                    doacaoExcluida.pessoa.endereco.animais -= 1
 
-        print('\n'*100 + '--------------------ADOÇÃO DE ANIMAL--------------------')
-        print(f'\n Animal: {animal.nome} ({animal.id}) | Adotante: {pessoa.nome} ({pessoa.cpf}) | Data: {data.strftime("%d")}/{data.strftime("%m")}/{data.strftime("%Y")}')
-        print('\n'*2 + ' Digite X para cancelar a operação.')
-        print('----------------------------------------------------------')
-        while True:
-            try:
-                confirma = str(input('\n Digite S para confirmar: ')).capitalize()
-                if confirma == 'X': return
-                if confirma != 'S': raise ValueError
-            except Exception: print(' Valor inválido, por favor digite "S" ou "X"')
-            else: break
+        if valores[0] == 'Alterar':
+            for key, value in valores[1].items():
+                if value == True: 
+                    valores = self.tela.alterarAdocao(dadosGlobais.adocoes[key])
+                    if valores[0] == 'Retornar': return
 
-        print('\n'*100 + '--------------------ADOÇÃO DE ANIMAL--------------------')
-        print(f'\n Animal: {animal.nome} ({animal.id}) | Adotante: {pessoa.nome} ({pessoa.cpf}) | Data: {data.strftime("%d")}/{data.strftime("%m")}/{data.strftime("%Y")}')
-        print('\n'*2 + ' Adoção realizada com sucesso.')
-        print('----------------------------------------------------------')
-        input(' Clique ENTER para continuar')
-
-        animal.dono = pessoa
-        pessoa.endereco.animais += 1
-        dadosGlobais.saveAdocao(Adocao(pessoa, animal, data, True))
-
-    def gerenciarDoacao(self):
-        print('\n'*100 + '--------------------LISTA DE ADOÇÕES--------------------')
-        print('\n 0- Cadastrar uma nova adoção')
-        if len(dadosGlobais.adocoes) == 0: print(' Não há nenhuma adoção cadastrada no sistema.' + '') 
-        else:
-            for i in range(len(dadosGlobais.adocoes)): print(f' {i+1}- {dadosGlobais.adocoes[i].data.strftime("%d")}/{dadosGlobais.adocoes[i].data.strftime("%m")}/{dadosGlobais.adocoes[i].data.strftime("%Y")} {dadosGlobais.adocoes[i].pessoa.nome} ({dadosGlobais.adocoes[i].pessoa.cpf}) adotou {dadosGlobais.adocoes[i].animal.nome} ({dadosGlobais.adocoes[i].animal.id})')
-        print('\n'*2 + ' Digite X para cancelar a operação.')
-        print('---------------------------------------------------------------------')
-        escolha = self.tela.validaInput(len(dadosGlobais.adocoes))
-
-        if escolha == 'X': return
-        if escolha == 0: self.cadastrarDoacao(); return
-
-        backupAdocao = copy.deepcopy(dadosGlobais.adocoes[escolha-1])
-        print('\n'*100 + '--------------------ALTERAR CADASTRO--------------------')
-        print('\n 0- Excluir Cadastro')
-        print(f' 1- Adotante: {dadosGlobais.adocoes[escolha-1].pessoa.nome} ({dadosGlobais.adocoes[escolha-1].pessoa.cpf})')
-        print(f' 2- Animal Adotado: {dadosGlobais.adocoes[escolha-1].animal.nome} ({dadosGlobais.adocoes[escolha-1].animal.id})')
-        print(f' 3- Data: {dadosGlobais.adocoes[escolha-1].data.strftime("%d")}/{dadosGlobais.adocoes[escolha-1].data.strftime("%m")}/{dadosGlobais.adocoes[escolha-1].data.strftime("%Y")}')
-        print('\n'*2 + ' Digite X para cancelar a operação.')
-        print('--------------------------------------------------------')
-        dado = self.tela.validaInput(3)
-        if dado == 'X': return
-
-        if dado == 0:
-            print('\n'*100 + '--------------------EXCLUIR CADASTRO--------------------')
-            print(f'\n Adotante: {dadosGlobais.adocoes[escolha-1].pessoa.nome} ({dadosGlobais.adocoes[escolha-1].pessoa.cpf})')
-            print(f' Animal Adotado: {dadosGlobais.adocoes[escolha-1].animal.nome} ({dadosGlobais.adocoes[escolha-1].animal.id})')
-            print(f' Data: {dadosGlobais.adocoes[escolha-1].data.strftime("%d")}/{dadosGlobais.adocoes[escolha-1].data.strftime("%m")}/{dadosGlobais.adocoes[escolha-1].data.strftime("%Y")}')
-            print('\n'*2 + ' Digite X para cancelar a operação.')
-            print('--------------------------------------------------------')
-            while True:
-                try:
-                    confirma = str(input('\n Digite S para confirmar a exclusäo: ')).capitalize()
-                    if confirma == 'X': return
-                    if confirma != 'S': raise ValueError
-                except Exception: print(' Valor inválido, por favor digite "S" ou "X"')
-                else: 
-                    dadosGlobais.adocoes[escolha-1].animal.dono = None
-                    dadosGlobais.adocoes[escolha-1].pessoa.endereco.animais -= 1
-                    dadosGlobais.adocoes.remove(dadosGlobais.adocoes[escolha-1])
-                    return
-
-        if dado == 1:
-            dadosGlobais.adocoes[escolha-1].pessoa.endereco.animais -= 1
-            listaAdotantes = self.controladorPessoa.listarPessoa('Todas as pessoas da lista nunca doaram um animal para essa ONG. \n', True)
-
-            if dadosGlobais.adocoes[escolha-1].animal.tipo == 'Cachorro' and dadosGlobais.adocoes[escolha-1].animal.tamanho == 'Grande':
-                listaAdotantes = self.controladorPessoa.listarPessoa('Todas as pessoas da lista nunca doaram um animal para essa ONG. \n', True, True)
-            
-            novoDado = self.tela.validaInput(len(listaAdotantes), 'Digite o número do adotante')
-            if novoDado == 'X': return
-            if novoDado == 0: self.controladorPessoa.cadastrarPessoa(); return
-
-            dadosGlobais.adocoes[escolha-1].pessoa = listaAdotantes[novoDado-1]
-            dadosGlobais.adocoes[escolha-1].pessoa.endereco.animais += 1
-
-        if dado == 2: 
-            if dadosGlobais.adocoes[escolha-1].pessoa.endereco.tipo == 'Apartamento' and dadosGlobais.adocoes[escolha-1].pessoa.endereco.tamanho == 'Pequeno':
-                listaAdotaveis = self.controladorAnimal.listarAnimal('Todos animais da lista foram vacinados contra: Raiva, Leptospirose e Hepatite Infecciosa. \n', True, True)
-            novoDado = self.tela.validaInput(len(listaAdotaveis), 'Digite o número do animal que será adotado')
-            if novoDado == 'X': return
-            if novoDado == 0: self.controladorAnimal.cadastrarAnimal(); return
-
-            dadosGlobais.adocoes[escolha-1].animal = listaAdotaveis[novoDado-1]
-
-        if dado == 3:
-            novoDado = self.tela.validaData(True)
-            if novoDado == 'X': return
-
-            dadosGlobais.adocoes[escolha-1].data = novoDado
-
-        print('\n'*100 + '--------------------ALTERAR CADASTRO--------------------')
-        print(f'\n Adotante: {dadosGlobais.adocoes[escolha-1].pessoa.nome} ({dadosGlobais.adocoes[escolha-1].pessoa.cpf})')
-        print(f' Animal Adotado: {dadosGlobais.adocoes[escolha-1].animal.nome} ({dadosGlobais.adocoes[escolha-1].animal.id})')
-        print(f' Data: {dadosGlobais.adocoes[escolha-1].data.strftime("%d")}/{dadosGlobais.adocoes[escolha-1].data.strftime("%m")}/{dadosGlobais.adocoes[escolha-1].data.strftime("%Y")}')
-        print('\n'*2 + ' Digite X para cancelar as alterações.')
-        print('--------------------------------------------------------')
-        while True:
-            try:
-                confirma = str(input('\n Digite S para confirmar: ')).capitalize()
-                if confirma == 'X': dadosGlobais.adocoes[escolha-1] = backupAdocao; return
-                if confirma != 'S': raise ValueError
-            except Exception: print(' Valor inválido, por favor digite "S" ou "X"')
-            else: break
+                    dadosGlobais.adocoes[key].data = datetime.date(int(valores[1]['ano']), int(valores[1]['mes']), int(valores[1]['dia']))
+                    dadosGlobais.adocoes[key].motivo = valores[1]['motivo']
