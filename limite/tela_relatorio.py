@@ -77,12 +77,14 @@ class TelaRelatorio(TelaPadrao):
                 self.window.close()
                 continue
 
+            self.window.close()
             return valores
         
     def mostrarRelatorio(self, dados):
         sg.ChangeLookAndFeel('TanBlue')
         layout = []
-
+        if len(dados) == 0: layout.append([sg.Text('')])
+        
         for dado in dados:
             if hasattr(dado, 'tipo'): layout.append([sg.Text(f' {dado.data.strftime("%d")}/{dado.data.strftime("%m")}/{dado.data.strftime("%Y")} - Vacina "{dado.tipo}" foi aplicada em {dado.animal.nome} ({dado.animal.id})')])
             if hasattr(dado, 'motivo'): layout.append([sg.Text(f' {dado.data.strftime("%d")}/{dado.data.strftime("%m")}/{dado.data.strftime("%Y")} - {dado.pessoa.nome} ({dado.pessoa.cpf}) doou {dado.animal.nome} ({dado.animal.id})')])
