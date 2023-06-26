@@ -1,7 +1,8 @@
-import PySimpleGUI as sg
 import datetime
+import PySimpleGUI as sg
+from limite.tela_padrao import TelaPadrao
 
-class TelaAdocao():
+class TelaAdocao(TelaPadrao):
     def __init__(self):
         self.window = None
         self.init_layout()
@@ -48,16 +49,22 @@ class TelaAdocao():
 
             valores = self.window.read()
 
-            if not animal.id in vacinados:
-                sg.popup('ERRO', 'Esse animal não possui as vacinas minimas para adoção')
+            if valores[0] == 'Retornar':
                 self.window.close()
-                continue
+                return valores
 
             if valores[0] == 'Confirmar':
                 for key, value in valores[1].items():
                     if value == True:
                         self.window.close()
                         animal = animais[key]
+                        break
+
+                print(vacinados)
+                if not (animal.id in vacinados):
+                    sg.popup('ERRO', 'Esse animal não possui as vacinas minimas para adoção')
+                    self.window.close()
+                    continue
 
                 if animal: break
 
@@ -86,13 +93,12 @@ class TelaAdocao():
 
             valores = self.window.read()
 
+            if valores[0] == 'Retornar':
+                self.window.close()
+                return valores
+
             if animal.tipo == 'Cachorro' and animal.tamanho == 'Grande' and pessoa.endereco.tipo == 'Apartamento' and pessoa.endereco.tamanho == 'Pequeno':
                 sg.popup('ERRO', 'O apartamento dessa pessoa não suporta o animal selecionado')
-                self.window.close()
-                continue
-
-            if pessoa.cpf in doadores:
-                sg.popup('ERRO', 'Essa pessoa já doou um animal para ONG')
                 self.window.close()
                 continue
 
@@ -101,6 +107,11 @@ class TelaAdocao():
                     if value == True:
                         self.window.close()
                         adotante = pessoas[key]
+
+                if pessoa.cpf in doadores:
+                    sg.popup('ERRO', 'Essa pessoa já doou um animal para ONG')
+                    self.window.close()
+                    continue
 
                 if adotante: break
 

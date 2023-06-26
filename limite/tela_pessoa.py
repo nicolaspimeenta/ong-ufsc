@@ -1,8 +1,8 @@
+import datetime
 import PySimpleGUI as sg
 from validate_docbr import CPF
-import datetime
-from dateutil.relativedelta import relativedelta
 from limite.tela_padrao import TelaPadrao
+from dateutil.relativedelta import relativedelta
 
 class TelaPessoa(TelaPadrao):
     def __init__(self):

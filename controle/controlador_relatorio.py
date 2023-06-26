@@ -1,11 +1,13 @@
+import pickle
 import datetime
 from limite.tela_relatorio import TelaRelatorio
 from dateutil.relativedelta import relativedelta
-from entidade import dadosGlobais
 
 class ControladorRelatorio:
     def __init__(self):
         self.tela = TelaRelatorio()
+        with open('dados.pkl', 'rb') as arquivo:
+            self.dadosGlobais = pickle.load(arquivo)
 
     def iniciar(self):
         opcoes = []
@@ -32,9 +34,9 @@ class ControladorRelatorio:
 
     def emitirRelatório(self, opcoes):
         dados = []
-        if 1 in opcoes: dados.extend(dadosGlobais.vacinas)
-        if 2 in opcoes: dados.extend(dadosGlobais.doacoes)
-        if 3 in opcoes: dados.extend(dadosGlobais.adocoes)
+        if 1 in opcoes: dados.extend(self.dadosGlobais.vacinas)
+        if 2 in opcoes: dados.extend(self.dadosGlobais.doacoes)
+        if 3 in opcoes: dados.extend(self.dadosGlobais.adocoes)
         print('\n'*100 + '--------------------EMITIR RELATÓRIO--------------------')
         print('\n 1- Última semana')
         print(' 2- Último mês')

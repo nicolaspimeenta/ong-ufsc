@@ -1,6 +1,6 @@
+import datetime
 import PySimpleGUI as sg
 from limite.tela_padrao import TelaPadrao
-import datetime
 
 class TelaAnimal(TelaPadrao):
     def __init__(self):

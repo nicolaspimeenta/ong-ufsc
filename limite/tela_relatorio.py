@@ -1,6 +1,7 @@
+from limite.tela_padrao import TelaPadrao
 import PySimpleGUI as sg
 
-class TelaRelatorio():
+class TelaRelatorio(TelaPadrao):
     def __init__(self):
         self.window = None
         self.init_layout()

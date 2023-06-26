@@ -1,3 +1,4 @@
+import pickle
 import datetime
 from abc import ABC
 
@@ -12,4 +13,8 @@ class TelaPadrao(ABC):
             return False
         else:
             return True
+        
+    def salvarDados(self, dados):
+        with open('dados.pkl', 'wb') as arquivo:
+            pickle.dump(dados, arquivo)
  
