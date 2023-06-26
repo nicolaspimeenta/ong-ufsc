@@ -68,8 +68,7 @@ class TelaAnimal(TelaPadrao):
             if len(animais) == 0:
                 layout.append([sg.Text('Não há nenhum animal cadastrado', font=('Arial', 10, 'bold'))])
             else:
-                for animal in animais:
-                    layout.append([sg.Radio(f'{animal.tipo} {animal.nome} | ID: {animal.id}', 'RADIO1')])
+                for animal in animais: layout.append([sg.Radio(f'{animal.tipo} {animal.nome} | ID: {animal.id}', 'RADIO1')])
 
             layout.append([sg.Button('Alterar', font=('Arial', 10)), sg.Button('Excluir', font=('Arial', 10), button_color='#B22222'), sg.Cancel('Retornar', font=('Arial', 10))])
             self.window = sg.Window('ONG UFSC', layout, font=('Arial', 10))
