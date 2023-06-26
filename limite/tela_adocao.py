@@ -66,6 +66,11 @@ class TelaAdocao(TelaPadrao):
                     self.window.close()
                     continue
 
+                if animal.dono:
+                    sg.popup('ERRO', 'Esse animal já possui um dono')
+                    self.window.close()
+                    continue
+
                 if animal: break
 
                 sg.popup('ERRO', 'Selecione algum animal ou cadastre um novo')
