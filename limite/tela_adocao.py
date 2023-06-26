@@ -42,7 +42,7 @@ class TelaAdocao(TelaPadrao):
             if len(animais) == 0:
                 layout.append([sg.Text('Não há nenhum animal cadastrado', font=('Arial', 10, 'bold'))])
             else:
-                for animal in animais: layout.append([sg.Radio(f' {animal.nome} | ID: {animal.id}', 'RADIO1')])
+                for animal in animais: layout.append([sg.Radio(f' {animal.tipo} {animal.nome} | ID: {animal.id}', 'RADIO1')])
 
             layout.append([sg.Button('Confirmar', font=('Arial', 10)), sg.Button('Cadastrar o Animal', font=('Arial', 10), button_color='#27AE60'), sg.Cancel('Retornar', font=('Arial', 10))])
             self.window = sg.Window('ONG UFSC', layout, font=('Arial', 10))
@@ -129,7 +129,7 @@ class TelaAdocao(TelaPadrao):
             layout = [
             [sg.Text(f'Dados Gerais:', font=('Arial', 12, 'bold'))],
             [sg.Text('Data da Adoção', size=(20, 1)), sg.InputText(f'{datetime.date.today().strftime("%d")}', key='dia', size=(5, 1)), sg.Text('/'), sg.InputText(f'{datetime.date.today().strftime("%m")}', key='mes', size=(5, 1)), sg.Text('/'), sg.InputText(f'{datetime.date.today().strftime("%Y")}', key='ano', size=(5, 1))],
-            [sg.Checkbox(f'A pessoa assinou o termo de responsabilidade', key='assinatura')]
+            [sg.Checkbox('A pessoa assinou o termo de responsabilidade', key='assinatura')],
             [sg.Button('Confirmar', font=('Arial', 10)), sg.Cancel('Retornar', font=('Arial', 10))]
             ]
             self.window = sg.Window('ONG UFSC', layout, font=('Arial', 10))
@@ -172,7 +172,7 @@ class TelaAdocao(TelaPadrao):
                 layout.append([sg.Text('Não há nenhuma adoção cadastrada', font=('Arial', 10, 'bold'))])
             else:
                 for adocao in adocoes:
-                    layout.append([sg.Radio(f'{adocao.data.strftime("%d")}/{adocao.data.strftime("%m")}/{adocao.data.strftime("%Y")} {adocao.pessoa.nome} doou o {adocao.animal.tipo} {adocao.animal.nome} (ID: {adocao.animal.id})', 'RADIO1')])
+                    layout.append([sg.Radio(f'{adocao.data.strftime("%d")}/{adocao.data.strftime("%m")}/{adocao.data.strftime("%Y")} {adocao.pessoa.nome} adotou o {adocao.animal.tipo} {adocao.animal.nome} (ID: {adocao.animal.id})', 'RADIO1')])
 
             layout.append([sg.Button('Alterar', font=('Arial', 10)), sg.Button('Excluir', font=('Arial', 10), button_color='#B22222'), sg.Cancel('Retornar', font=('Arial', 10))])
             self.window = sg.Window('ONG UFSC', layout, font=('Arial', 10))
@@ -195,7 +195,7 @@ class TelaAdocao(TelaPadrao):
             layout = [
             [sg.Text('Dados Gerais:', font=('Arial', 12, 'bold'))],
             [sg.Text('Adotante', size=(20, 1)), sg.InputText(f'{adocao.pessoa.nome} | {adocao.pessoa.cpf}', key='pessoa', disabled=True)],
-            [sg.Text('Animal Adotado', size=(20, 1)), sg.InputText(f'{adocao.animal.tipo} {adocao.animal.nome} | ID: {adocao.animail.id}', key='animal', disabled=True)],
+            [sg.Text('Animal Adotado', size=(20, 1)), sg.InputText(f'{adocao.animal.tipo} {adocao.animal.nome} | ID: {adocao.animal.id}', key='animal', disabled=True)],
             [sg.Text('Data da Adoção', size=(20, 1)), sg.InputText(f'{adocao.data.strftime("%d")}', key='dia', size=(5, 1)), sg.Text('/'), sg.InputText(f'{adocao.data.strftime("%m")}', key='mes', size=(5, 1)), sg.Text('/'), sg.InputText(f'{adocao.data.strftime("%Y")}', key='ano', size=(5, 1))],
             [sg.Button('Confirmar', font=('Arial', 10)), sg.Cancel('Retornar', font=('Arial', 10))]
             ]

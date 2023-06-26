@@ -69,7 +69,7 @@ class TelaAnimal(TelaPadrao):
                 layout.append([sg.Text('Não há nenhum animal cadastrado', font=('Arial', 10, 'bold'))])
             else:
                 for animal in animais:
-                    layout.append([sg.Radio(f' {animal.nome} | ID: {animal.id}', 'RADIO1')])
+                    layout.append([sg.Radio(f'{animal.tipo} {animal.nome} | ID: {animal.id}', 'RADIO1')])
 
             layout.append([sg.Button('Alterar', font=('Arial', 10)), sg.Button('Excluir', font=('Arial', 10), button_color='#B22222'), sg.Cancel('Retornar', font=('Arial', 10))])
             self.window = sg.Window('ONG UFSC', layout, font=('Arial', 10))
@@ -141,7 +141,7 @@ class TelaAnimal(TelaPadrao):
                     layout.append([sg.Text('Não há nenhum animal cadastrado', font=('Arial', 10, 'bold'))])
                 else:
                     for animal in animais:
-                        layout.append([sg.Checkbox(f' {animal.nome} | ID: {animal.id}', key=animal.id)])
+                        layout.append([sg.Checkbox(f'{animal.tipo} {animal.nome} | ID: {animal.id}', key=animal.id)])
 
                 layout.append([sg.Button('Confirmar', font=('Arial', 10)), sg.Cancel('Retornar', font=('Arial', 10))])
                 self.window = sg.Window('ONG UFSC', layout, font=('Arial', 10))

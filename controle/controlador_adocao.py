@@ -67,4 +67,5 @@ class ControladorAdocao:
                     if valores[0] == 'Retornar': return
 
                     self.dadosGlobais.adocoes[key].data = datetime.date(int(valores[1]['ano']), int(valores[1]['mes']), int(valores[1]['dia']))
-                    self.dadosGlobais.adocoes[key].motivo = valores[1]['motivo']
+
+        self.tela.salvarDados(self.dadosGlobais)
