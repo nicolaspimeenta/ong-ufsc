@@ -75,20 +75,27 @@ class TelaDoacao(TelaPadrao):
             if len(animais) == 0:
                 layout.append([sg.Text('Não há nenhum animal cadastrado', font=('Arial', 10, 'bold'))])
             else:
-                for animal in animais:
-                    if animal.dono != doador and animal.dono: layout.append([sg.InputText(f' {animal.tipo} {animal.nome} | ID: {animal.id} (Esse animal pertence a outra pessoa)', disabled=True)]); continue
-                    layout.append([sg.Radio(f' {animal.tipo} {animal.nome} | ID: {animal.id}', 'RADIO1')])
+                for animal in animais: layout.append([sg.Radio(f' {animal.tipo} {animal.nome} | ID: {animal.id}', 'RADIO1')])
 
             layout.append([sg.Button('Confirmar', font=('Arial', 10)), sg.Button('Cadastrar o Animal', font=('Arial', 10), button_color='#27AE60'), sg.Cancel('Retornar', font=('Arial', 10))])
             self.window = sg.Window('ONG UFSC', layout, font=('Arial', 10))
 
             valores = self.window.read()
 
+            if valores[0] == 'Retornar':
+                self.window.close()
+                return valores
+
             if valores[0] == 'Confirmar':
                 for key, value in valores[1].items():
                     if value == True:
                         self.window.close()
                         animal = animais[key]
+
+                    if animal.dono != doador and animal.dono:
+                        sg.popup('ERRO', 'Esse animal pertence a outra pessoa')
+                        self.window.close()
+                        continue
 
                 if animal: break
 
